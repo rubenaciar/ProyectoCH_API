@@ -3,19 +3,37 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace ProyectoFinalCoderHouse.Repository
 {
-    public static class VentaHandler
+    
+    public class VentaHandler
     {
-        public static string ConnectionString = @"Server=P533750\SQLEXPRESS;Database=SistemaGestion;Trusted_Connection=True;";
+
+
+        private static readonly string _connectionString;
+        static VentaHandler()
+        {
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            _connectionString = configuration.GetConnectionString("connectionDB");
+        }
+
+
         // Método que trae todas las ventas de la BD que contienen productos de un determinado Usuario.
         // Método que trae todas los ProductoVendido de la BD que estén asociados a una venta.
-        public static List<ProductoVendido> TraerVentas()
+        public List<ProductoVendido> TraerVentas()
         {
+
+           
             List<ProductoVendido> productosVendidos = new List<ProductoVendido>();
 
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
                 const string query = "SELECT pv.Id, pv.Stock, pv.IdProducto, pv.IdVenta " + // Query que me devuelve las ventas que contienen productos con IdUsuario = idUsuario.
                                         "FROM Venta AS v " +
@@ -60,7 +78,7 @@ namespace ProyectoFinalCoderHouse.Repository
             bool resultado = false;
             int idVenta = 0;
 
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
                 string queryInsert = "INSERT INTO [SistemaGestion].[dbo].[Venta] (Comentarios) " + // Query que me permite agregar una Venta.
                                         "VALUES (@comentarios) " +

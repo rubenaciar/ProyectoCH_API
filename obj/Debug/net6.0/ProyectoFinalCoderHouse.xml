@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ProyectoFinalCoderHouse</name>
+    </assembly>
+    <members>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.InicioDeSesion(System.String,System.String)">
+            <summary>
+            Inicio de Sesión ingresando Usuario y Contaseña.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Models.Usuario.IsValidaContraseña(System.String,System.Int32)">
+            Método privado para validar una contraseña segura
+        </member>
+    </members>
+</doc>

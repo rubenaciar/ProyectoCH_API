@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ProyectoFinalCoderHouse.Modelos;
+using System;
 
 namespace ProyectoFinalCoderHouse.Models
 {
@@ -16,6 +13,7 @@ namespace ProyectoFinalCoderHouse.Models
         private string _nombreUsuario;
         private string _contraseña;
         private string _mail;
+        
         #endregion
 
         #region Constructores
@@ -55,6 +53,8 @@ namespace ProyectoFinalCoderHouse.Models
             _nombreUsuario = nombreUsuario;
             _contraseña = contraseña;
             _mail = mail;
+            // Mensaje de creacion de la instancia de Usuario
+            Console.WriteLine("La instancia de Usuario se ha creado con constuctor con argumentos.");
         }
         // Constructor sin argumentos para inicializar por defecto los atributos privados
         public Usuario()
@@ -66,9 +66,11 @@ namespace ProyectoFinalCoderHouse.Models
             _nombreUsuario = string.Empty;
             _contraseña = string.Empty;
             _mail = string.Empty;
+            EsValido = false;
+
 
             // Mensaje de creacion de la instancia de Usuario
-            Console.WriteLine("La instancia de Usuario se ha creado satisfactoriamente.");
+            Console.WriteLine("La instancia de Usuario se ha creado con constuctor sin argumentos.");
         }
 
         #endregion
@@ -114,7 +116,7 @@ namespace ProyectoFinalCoderHouse.Models
             get { return _contraseña; }
             set
             {
-                // Validacion de contraseña segura con largo mayor a 8 y cuatro validaciones
+                // Validacion de contraseña segura con largo de 8 y cuatro condiciones a contener
                 const int iLargoContraseña = 8;
                 if (!IsValidaContraseña(value, iLargoContraseña))
                 {
@@ -140,8 +142,9 @@ namespace ProyectoFinalCoderHouse.Models
                 _mail = value;
             }
         }
-
-
+        public bool EsValido { get; set; }
+        
+        public string MensajeLogin { get; set; }
         #endregion
 
 

@@ -1,24 +1,36 @@
-﻿using ProyectoFinalCoderHouse.Models;
+﻿using Microsoft.Extensions.Configuration;
+using ProyectoFinalCoderHouse.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 
 namespace ProyectoFinalCoderHouse.Repository
 {
-    public static class ProductoVendidoHandler
+    public class ProductoVendidoHandler
     {
-        public static string ConnectionString = @"Server=P533750\SQLEXPRESS;Database=SistemaGestion;Trusted_Connection=True;";
-        public static List<ProductoVendido> TraerListaProductoVendidos()
+        private static readonly string _connectionString;
+        static ProductoVendidoHandler()
+        {
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            _connectionString = configuration.GetConnectionString("connectionDB");
+        }
+
+        public List<ProductoVendido> TraerListaProductoVendidos()
         {
 
-            //string connectionString = @"Server=P533750\SQLEXPRESS;Database=SistemaGestion;Trusted_Connection=True;";
+         
             var query = "SELECT Id,Stock,IdProducto,IdVenta FROM ProductoVendido";
             var listaProductoVendidos = new List<ProductoVendido>();
 
             //Creamos una instancia de conexión utilizando el string a nuestra BD, usando using para limpiar los recursos
 
-            using (SqlConnection conect = new SqlConnection(ConnectionString))
+            using (SqlConnection conect = new SqlConnection(_connectionString))
             {
                 // Abrimos nuestra conexion a la BD
                 conect.Open();
@@ -60,14 +72,14 @@ namespace ProyectoFinalCoderHouse.Repository
         }
 
         // Método que recibe una lista de objetos de clase ProductoVendido y debe cargar los mismos en la tabla ProductoVendido en BD. Se utiliza para poder ejecutar el segundo paso de CargarVenta().
-        public static bool CargarProductosVendidos(List<ProductoVendido> productosVendidos)
+        public bool CargarProductosVendidos(List<ProductoVendido> productosVendidos)
         {
             bool resultado = false;
             long idProductoVendido = 0;
             int elementosEnLaLista = 0;
             int idValidoEncontrado = 0;
 
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
                 string queryInsert = "INSERT INTO [SistemaGestion].[dbo].[ProductoVendido] (IdProducto, Stock, IdVenta) " + // Query que me permite agregar un ProductoVendido.
                                         "VALUES (@idProducto, @stock, @idventa) " +

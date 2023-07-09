@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ProyectoFinalCoderHouse.Models;
 using ProyectoFinalCoderHouse.Repository;
+//using ProyectoFinalCoderHouse.Modelos;
 
 namespace ProyectoFinalCoderHouse.Controllers
 {
@@ -13,33 +11,46 @@ namespace ProyectoFinalCoderHouse.Controllers
     [Route("api/[controller]")]
     public class UsuarioController : ControllerBase
     {
-        private readonly ILogger<ProductoVendido> _logger;
+        private readonly UsuarioHandler _usuarioHandler;
+        private readonly ILogger<Usuario> _logger;
 
-        public UsuarioController(ILogger<ProductoVendido> logger)
+        public UsuarioController(UsuarioHandler usuarioHandler, ILogger<Usuario> logger)
         {
             _logger = logger;
+            _usuarioHandler = usuarioHandler;
         }
 
+       
         [HttpGet]
         public List<Usuario> GetAllUsuarios()
         {
-            var usuarios = UsuarioHandler.TraerListaUsuarios();
+            return _usuarioHandler.TraerListaUsuarios();
 
-            return usuarios;
+            
         }
+        
+        
+        /// <summary>
+        /// Inicio de Sesión ingresando Usuario y Contaseña.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{nombreUsuario}/{contraseña}")]
+        public Usuario InicioDeSesion(string nombreUsuario, string contraseña)
+        {
+            var usuario = _usuarioHandler.InicioDeSesion(nombreUsuario, contraseña);
+            return (usuario.EsValido) ? usuario : new Usuario()
+            {
+                MensajeLogin = "Nombre de usuario o contraseña incorrectos",
 
-        //[HttpGet("{nombreUsuario}/{contraseña}")]
-        //public Usuario GetUsuarioByContraseña(string nombreUsuario, string contraseña)
-        //{
-        //    var usuario = UsuarioHandler.InicioDeSesion(nombreUsuario, contraseña);
-
-        //    return usuario == null ? new Usuario() : usuario;
-        //}
+            };
+           
+            
+        }
 
         [HttpPut]
         public void PutUsuario([FromBody]Usuario usuario)
         {
-           UsuarioHandler.ModificarUsuario(usuario);
+            _usuarioHandler.ModificarUsuario(usuario);
         }
        
     }

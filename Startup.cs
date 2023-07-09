@@ -1,17 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+using Microsoft.EntityFrameworkCore;
+using ProyectoFinalCoderHouse.Repository;
+using ProyectoFinalCoderHouse.Data;
+using System.IO;
+using System.Reflection;
 namespace ProyectoFinalCoderHouse
 {
     public class Startup
@@ -36,8 +34,24 @@ namespace ProyectoFinalCoderHouse
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProyectoFinalCoderHouse", Version = "v1" });
+                // Personalizar los estilos CSS para los comentarios <summary>
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Proyecto Final CH - Ruben Aciar", Version = "v1" });
+                c.OperationFilter<CustomSummaryStyleFilter>();
+                // Especificar la ruta del archivo XML de documentación
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
             });
+
+            var ConnectionString = Configuration.GetConnectionString("connectionDB");
+
+            services.AddDbContext<SistemaGestionContext>(options => options.UseSqlServer(ConnectionString));
+            services.AddScoped<VentaHandler>();
+            services.AddScoped<ProductoHandler>();
+            services.AddScoped<UsuarioHandler>();
+            services.AddScoped<ProductoVendidoHandler>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,7 +62,7 @@ namespace ProyectoFinalCoderHouse
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProyectoFinalCoderHouse v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Proyecto Final CH - Ruben Aciar v1"));
             }
 
             app.UseHttpsRedirection();

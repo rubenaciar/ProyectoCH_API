@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ProyectoFinalCoderHouse.Controllers.DTOS;
 using ProyectoFinalCoderHouse.Models;
 using ProyectoFinalCoderHouse.Repository;
@@ -14,17 +11,27 @@ namespace ProyectoFinalCoderHouse.Controllers
     [Route("api/[controller]")]
     public class VentaController : ControllerBase
     {
-        private readonly ILogger<ProductoVendido> _logger;
+        private readonly VentaHandler _ventaHandler;
+        private readonly ProductoHandler _productoHandler;
+        private readonly UsuarioHandler _usuarioHandler;
+        private readonly ProductoVendidoHandler _productoVendidoHandler;
 
-        public VentaController(ILogger<ProductoVendido> logger)
+        private readonly ILogger<ProductoController> _logger;
+
+        public VentaController(VentaHandler ventaHandler, ProductoHandler productoHandler, UsuarioHandler usuarioHandler, ProductoVendidoHandler productoVendidoHandler,ILogger<ProductoController> logger)
         {
             _logger = logger;
+            _ventaHandler = ventaHandler;
+            _productoHandler = productoHandler;
+            _usuarioHandler = usuarioHandler;
+            _productoVendidoHandler = productoVendidoHandler;
         }
+       
 
         [HttpGet(Name = "TraerVentas")]
         public List<ProductoVendido> TraerVentas()
         {
-            return VentaHandler.TraerVentas();
+            return _ventaHandler.TraerVentas();
         }
 
         [HttpPost(Name = "CargarVenta")]    // No se reciben argumentos desde la URL. En el cuerpo de la petición está la lista de productos junto con el IdUsuario.
@@ -39,7 +46,7 @@ namespace ProyectoFinalCoderHouse.Controllers
             Usuario usuario = new Usuario();
             foreach (PostVenta item in listaDeProductosVendidos)
             {
-                producto = ProductoHandler.TraerProducto_conId(item.Id);
+                producto = _productoHandler.TraerProducto_conId(item.Id);
                 if (producto.Id <= 0) // Verifico que todos los Id de Producto recibidos sean válidos
                 {
                     return false;
@@ -55,7 +62,7 @@ namespace ProyectoFinalCoderHouse.Controllers
                     return false;
                 }
 
-                usuario = UsuarioHandler.TraerUsuario_conId(item.IdUsuario);
+                usuario = _usuarioHandler.TraerUsuario_conId(item.IdUsuario);
                 if (usuario.Id <= 0) // Verifico que el Id de Usuario asociado a la venta se encuentre en la BD
                 {
                     return false;
@@ -79,7 +86,7 @@ namespace ProyectoFinalCoderHouse.Controllers
                     productosVendidos.Add(productoVendido);
                 }
                 // Cargo los productos vendidos en la tabla ProductoVendido
-                if (ProductoVendidoHandler.CargarProductosVendidos(productosVendidos))
+                if (_productoVendidoHandler.CargarProductosVendidos(productosVendidos))
                 {
                     // Si los productos vendidos se cargaron con exito continuo
                     bool resultado = false;

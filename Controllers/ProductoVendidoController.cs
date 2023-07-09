@@ -2,10 +2,7 @@
 using Microsoft.Extensions.Logging;
 using ProyectoFinalCoderHouse.Models;
 using ProyectoFinalCoderHouse.Repository;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProyectoFinalCoderHouse.Controllers
 {
@@ -15,17 +12,19 @@ namespace ProyectoFinalCoderHouse.Controllers
     {
 
         private readonly ILogger<ProductoVendidoController> _logger;
-
-        public ProductoVendidoController(ILogger<ProductoVendidoController> logger)
+        private readonly ProductoVendidoHandler _productoVendidoHandler;
+        public ProductoVendidoController(ProductoVendidoHandler productoVendidoHandler, ILogger<ProductoVendidoController> logger)
         {
             _logger = logger;
+            _productoVendidoHandler = productoVendidoHandler;
         }
+        
 
         [HttpGet]
         public IEnumerable<ProductoVendido> GetAllProductosVendidos()
         {
          
-            return ProductoVendidoHandler.TraerListaProductoVendidos();
+            return _productoVendidoHandler.TraerListaProductoVendidos();
 
        
         }
