@@ -1,4 +1,4 @@
-﻿using ProyectoFinalCoderHouse.Modelos;
+﻿using ProyectoFinalCoderHouse.Exceptions;
 using System;
 
 namespace ProyectoFinalCoderHouse.Models
@@ -67,6 +67,7 @@ namespace ProyectoFinalCoderHouse.Models
             _contraseña = string.Empty;
             _mail = string.Empty;
             EsValido = false;
+            MensajeLogin = null;
 
 
             // Mensaje de creacion de la instancia de Usuario
@@ -116,18 +117,18 @@ namespace ProyectoFinalCoderHouse.Models
             get { return _contraseña; }
             set
             {
-                // Validacion de contraseña segura con largo de 8 y cuatro condiciones a contener
                 const int iLargoContraseña = 8;
                 if (!IsValidaContraseña(value, iLargoContraseña))
                 {
-                    throw new ArgumentException("Ha ingresado una contraseña inválida. Debe tener un mínimo de largo 8 con: un número, una mayúscula, una minúscula y un caracter especial.");
+                    throw new ContraseñaInvalidaException("Contraseña inválida: debe tener un mínimo de 8 caracteres e incluir: 0-9, A-Z, a-z y un carácter especial.");
                 }
 
                 _contraseña = value;
-
             }
         }
 
+
+      
         public string Mail
         {
             get { return _mail; }
@@ -153,7 +154,7 @@ namespace ProyectoFinalCoderHouse.Models
 
 
         ///Método privado para validar una contraseña segura
-        private static bool IsValidaContraseña(string sPassword, int iLongitud)
+        public static bool IsValidaContraseña(string sPassword, int iLongitud)
         {
             bool bMayuscula = false, bMinuscula = false, bNumerica = false, bCarEspecial = false;
 

@@ -10,8 +10,8 @@ namespace ProyectoFinalCoderHouse
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             // Modificar el estilo de la fuente en los comentarios <summary>
-            operation.Summary = "<span font-size: 20px; font-family: Arial;'>" + operation.Summary + "</span>";
-
+            operation.Summary = "<span font-size: 20px; font-family: New Times Roman;'>" + operation.Summary + "</span>";
+            
             //if (context.ApiDescription.RelativePath.Contains("/api/Usuario/{nombreUsuario}/{contraseña}"))
             //{
             //    operation.Summary = "<span style='font-size: 20px; font-family: Arial;'>" + operation.Summary + "</span>";

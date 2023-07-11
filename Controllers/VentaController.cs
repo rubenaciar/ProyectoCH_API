@@ -62,7 +62,7 @@ namespace ProyectoFinalCoderHouse.Controllers
                     return false;
                 }
 
-                usuario = _usuarioHandler.TraerUsuario_conId(item.IdUsuario);
+                usuario = _usuarioHandler.TraerUsuarioPorId(item.IdUsuario);
                 if (usuario.Id <= 0) // Verifico que el Id de Usuario asociado a la venta se encuentre en la BD
                 {
                     return false;

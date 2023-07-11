@@ -72,6 +72,38 @@ namespace ProyectoFinalCoderHouse.Repository
             return usuario;
         }
 
+
+        // Método para insertar un nuevo usuario en la Base de Datos
+        // Recibe un objeto Usuario con la información del usuario a crear
+        // Devuelve el Id asignado al nuevo registro
+        public int CrearUsuario(Usuario usuario)
+        {
+            // Creamos una nueva conexión a la base de datos utilizando el string de conexión que se recibió en el constructor
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Definimos la consulta SQL que vamos a ejecutar
+                const string query = @"INSERT INTO Usuario (Nombre, Apellido, NombreUsuario, Contraseña, Mail) 
+                                   VALUES (@Nombre, @Apellido, @NombreUsuario, @Contraseña, @Mail);
+                                   SELECT SCOPE_IDENTITY();";
+                // Creamos una nueva instancia de SqlCommand con la consulta SQL y la conexión asociada
+                using (var command = new SqlCommand(query, connection))
+                {
+                    // Agregamos los parámetros correspondientes a la consulta SQL utilizando el objeto Usuario recibido como parámetro
+                    command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
+                    command.Parameters.AddWithValue("@Apellido", usuario.Apellido);
+                    command.Parameters.AddWithValue("@NombreUsuario", usuario.NombreUsuario);
+                    command.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
+                    command.Parameters.AddWithValue("@Mail", usuario.Mail);
+
+                    // Ejecutamos la consulta SQL utilizando ExecuteScalar() que retorna el id generado para nuevo registro insertado
+                    return (int)(decimal)command.ExecuteScalar();
+                }
+            }
+        }
+
         // Método para modificar un usuario existente en la Base de Datos
         // Recibe un objeto Usuario con la información actualizada del usuario a modificar
         // Devuelve true si la modificación fue exitosa, false si no
@@ -103,10 +135,35 @@ namespace ProyectoFinalCoderHouse.Repository
             }
         }
 
+        // Método para eliminar un usuario de la Base de Datos según su Id
+        // Recibe el Id del usuario que se desea eliminar
+        // Devuelve true si la eliminación fue exitosa, false si no
+        public bool EliminarUsuario(int id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                // Definimos la consulta SQL que vamos a ejecutar
+                const string query = @"DELETE FROM Usuario WHERE Id = @Id";
+                // Creamos una nueva instancia de SqlCommand con la consulta SQL y la conexión asociada
+                using (var command = new SqlCommand(query, connection))
+                {
+                    // Agregamos el parámetro correspondiente a la consulta SQL utilizando el Id recibido como parámetro
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    // Ejecutamos la consulta SQL utilizando ExecuteNonQuery() que retorna la cantidad de filas afectadas por la consulta SQL
+                    // En este caso, debería ser 1 si se eliminó el usuario correctamente, o 0 si no se encontró el usuario con el Id correspondiente
+                    return command.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
+
+        // Método para devolver la Lista de Usuarios almacenados en la base de datos.
         public List<Usuario> TraerListaUsuarios()
         {
 
-            //string connectionString = @"Server=P533750\SQLEXPRESS;Database=SistemaGestion;Trusted_Connection=True;";
             var query = "SELECT Id, Nombre, Apellido, NombreUsuario, Contraseña, Mail FROM Usuario";
             List<Usuario> listaUsuarios = new List<Usuario>();
 
@@ -155,9 +212,51 @@ namespace ProyectoFinalCoderHouse.Repository
 
         }
 
-        
+       
+
+        // Método que recibe el Nombre del Usuario y debe buscarlo en la base de datos para devolver todos sus atributos.
+        public Usuario TraerUsuarioPorNombre(string nombreUsuario)
+        {
+            Usuario usuario = new Usuario();
+
+            // Verifico si el argumento pasado es válido
+            if (string.IsNullOrWhiteSpace(nombreUsuario))
+            {
+                throw new ArgumentException("El nombre de usuario no puede ser nulo o vacio.");
+            }
+
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Usuario WHERE NombreUsuario = @nombreUsuario;", sqlConnection))
+                {
+                    var sqlParameter = new SqlParameter();
+                    sqlParameter.ParameterName = "nombreUsuario";
+                    sqlParameter.SqlDbType = SqlDbType.VarChar;
+                    sqlParameter.Value = nombreUsuario;
+                    sqlCommand.Parameters.Add(sqlParameter);
+
+                    sqlConnection.Open();
+
+                    using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+                    {
+                        if (dataReader.HasRows & dataReader.Read())
+                        {
+                            usuario.Id = Convert.ToInt32(dataReader["Id"]);
+                            usuario.Nombre = dataReader["Nombre"].ToString();
+                            usuario.Apellido = dataReader["Apellido"].ToString();
+                            usuario.NombreUsuario = dataReader["NombreUsuario"].ToString();
+                            usuario.Contraseña = dataReader["Contraseña"].ToString();
+                            usuario.Mail = dataReader["Mail"].ToString();
+                        }
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            return usuario;
+        }
+
         // Método que recibe un Id de Usuario y debe buscarlo en la base de datos para devolver todos sus atributos.
-        public Usuario TraerUsuario_conId(long id)
+        public Usuario TraerUsuarioPorId(long id)
         {
             Usuario usuario = new Usuario();
 

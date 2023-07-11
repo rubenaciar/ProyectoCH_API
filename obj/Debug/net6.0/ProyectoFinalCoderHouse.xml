@@ -4,9 +4,45 @@
         <name>ProyectoFinalCoderHouse</name>
     </assembly>
     <members>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.NombreController.Get">
+            <summary>
+            Nombre de la aplicación.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.InicioDeSesion(System.String,System.String)">
             <summary>
             Inicio de Sesión ingresando Usuario y Contaseña.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.GetAllUsuarios">
+            <summary>
+            Traer una Lista de todos los Usuarios existentes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.GetNombreUsuario(System.String)">
+            <summary>
+            Traer datos de un Usuario ingresando el nombre de usuario.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.PostUsuario(ProyectoFinalCoderHouse.Models.Usuario)">
+            <summary>
+            Crear un Usuario nuevo.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.PutUsuario(ProyectoFinalCoderHouse.Models.Usuario)">
+            <summary>
+            Modificar un Usuario existente.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.DeleteUsuario(System.Int32)">
+            <summary>
+            Eliminar un Usuario existente por ID.
             </summary>
             <returns></returns>
         </member>
