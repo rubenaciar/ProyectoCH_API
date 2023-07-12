@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ProyectoFinalCoderHouse.Models
 {
@@ -71,6 +72,9 @@ namespace ProyectoFinalCoderHouse.Models
         public decimal PrecioVenta { get; set; } // Precio de venta del producto
         public int Stock { get; set; } // Cantidad en stock del producto
         public int IdUsuario { get; set; } // Identificador del usuario que creo el producto
+        public virtual Usuario IdUsuarioNavigation { get; set; }
+
+        public virtual ICollection<ProductoVendido> ProductoVendidos { get; set; } = new List<ProductoVendido>();
         #endregion
 
     }

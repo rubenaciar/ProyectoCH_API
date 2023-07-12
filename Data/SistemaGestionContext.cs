@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using ProyectoFinalCoderHouse.Modelos;
+using ProyectoFinalCoderHouse.Models;
 
 namespace ProyectoFinalCoderHouse.Data;
 

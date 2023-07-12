@@ -75,7 +75,7 @@ namespace ProyectoFinalCoderHouse.Repository
         // Método que recibe como parámetro una Venta y debe cargarla en BD.
         public static int CrearVenta(Venta venta)
         {
-            bool resultado = false;
+           
             int idVenta = 0;
 
             using (SqlConnection sqlConnection = new SqlConnection(_connectionString))

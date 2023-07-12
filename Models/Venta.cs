@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ProyectoFinalCoderHouse.Models
 {
@@ -31,6 +32,10 @@ namespace ProyectoFinalCoderHouse.Models
         public int Id { get; set; } // Identificador unico de la venta
         public string Comentarios { get; set; } // Descripciones o comentarios de la venta
         public int IdUsuario { get; set; } // Identificador del usuario que realizo la venta
+
+        public virtual Usuario IdUsuarioNavigation { get; set; }
+
+        public virtual ICollection<ProductoVendido> ProductoVendidos { get; set; } = new List<ProductoVendido>();
 
         #endregion
     }

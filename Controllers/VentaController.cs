@@ -46,7 +46,7 @@ namespace ProyectoFinalCoderHouse.Controllers
             Usuario usuario = new Usuario();
             foreach (PostVenta item in listaDeProductosVendidos)
             {
-                producto = _productoHandler.TraerProducto_conId(item.Id);
+                producto = _productoHandler.TraerProductoPorID(item.Id);
                 if (producto.Id <= 0) // Verifico que todos los Id de Producto recibidos sean válidos
                 {
                     return false;

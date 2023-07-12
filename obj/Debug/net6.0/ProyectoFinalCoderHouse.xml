@@ -10,6 +10,36 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.GetAllProductos">
+            <summary>
+            Traer una Lista de todos los Productos existentes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.PostProducto(ProyectoFinalCoderHouse.Models.Producto)">
+            <summary>
+            Crear un Producto nuevo.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.PutProducto(ProyectoFinalCoderHouse.Models.Producto)">
+            <summary>
+            Modificar un Producto existente.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.DeleteProducto(System.Int32)">
+            <summary>
+            Eliminar un Producto existente ingresando el ID.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.GetProductosPorIdUsuario(System.Int32)">
+            <summary>
+            Traer los productos cargados por un Usuario ingresando su ID.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.InicioDeSesion(System.String,System.String)">
             <summary>
             Inicio de Sesión ingresando Usuario y Contaseña.
@@ -24,7 +54,7 @@
         </member>
         <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.GetNombreUsuario(System.String)">
             <summary>
-            Traer datos de un Usuario ingresando el nombre de usuario.
+            Traer datos de un Usuario ingresando su nombre de usuario.
             </summary>
             <returns></returns>
         </member>
@@ -42,7 +72,7 @@
         </member>
         <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.DeleteUsuario(System.Int32)">
             <summary>
-            Eliminar un Usuario existente por ID.
+            Eliminar un Usuario existente ingresando el ID.
             </summary>
             <returns></returns>
         </member>

@@ -18,33 +18,63 @@ namespace ProyectoFinalCoderHouse.Controllers
             _productoHandler = productoHandler;
         }
 
+
+        /// <summary>
+        /// Traer una Lista de todos los Productos existentes.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-       
         public IEnumerable<Producto> GetAllProductos()
         {
             var productos = _productoHandler.TraerListaProductos();
 
             return productos;
         }
+        
 
-
-        [HttpPut]
-        public void PutProducto([FromBody]Producto producto)
-        {
-
-            _productoHandler.ModificarProducto(producto);
-        }
-
+        /// <summary>
+        /// Crear un Producto nuevo.
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public void PostProducto([FromBody]Producto producto)
         {
             _productoHandler.CrearProducto(producto);
         }
 
+
+        /// <summary>
+        /// Modificar un Producto existente.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        public void PutProducto([FromBody]Producto producto)
+        {
+            _productoHandler.ModificarProducto(producto);
+        }
+
+
+        /// <summary>
+        /// Eliminar un Producto existente ingresando el ID.
+        /// </summary>
+        /// <returns></returns>
         [HttpDelete("{idProducto}")]
         public void DeleteProducto([FromBody] int idProducto)
         {
             _productoHandler.EliminarProducto(idProducto);
+        }
+
+
+        /// <summary>
+        /// Traer los productos cargados por un Usuario ingresando su ID.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{idUsuario}")]
+        public IEnumerable<Producto> GetProductosPorIdUsuario(int idUsuario)
+        {
+            var productos = _productoHandler.TraerProductosPorIdUsuario(idUsuario);
+
+            return productos;
         }
     }
 }

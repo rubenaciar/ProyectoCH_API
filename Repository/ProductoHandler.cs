@@ -163,6 +163,63 @@ namespace ProyectoFinalCoderHouse.Repository
 
         }
 
+
+        // Método para traer la lista de Productos que fueron ingresador por un IDUsuario
+
+        public List<Producto> TraerProductosPorIdUsuario(int idUsuario)
+        {
+            List<Producto> productos = new List<Producto>();
+
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand())
+                {
+                    sqlCommand.Connection = sqlConnection;
+                    sqlCommand.Connection.Open();
+                    sqlCommand.CommandText = @"SELECT Prod.[Id]
+                                                  ,Prod.[Descripciones]
+                                                  ,Prod.[Costo]
+                                                  ,Prod.[PrecioVenta]
+                                                  ,Prod.[Stock]
+                                                  ,Prod.[IdUsuario]
+	                                              ,Usuario.Apellido
+                                                  ,Usuario.Nombre
+                                                  FROM [Producto] Prod
+                                                  INNER JOIN [Usuario] ON Prod.[IdUsuario] = Usuario.[Id]
+                                                  WHERE IdUsuario = @idUsuario;";
+
+                    sqlCommand.Parameters.AddWithValue("@idUsuario", idUsuario);
+
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                    dataAdapter.SelectCommand = sqlCommand;
+                    DataTable table = new DataTable();
+                    dataAdapter.Fill(table); //Se ejecuta el Select
+                    sqlCommand.Connection.Close();
+                    foreach (DataRow row in table.Rows)
+                    {
+                        Producto producto = new Producto();
+                        producto.Id = Convert.ToInt32(row["Id"]);
+                        producto.Descripciones = row["Descripciones"].ToString();
+                        producto.Costo = Convert.ToDecimal(row["Costo"]);
+                        producto.PrecioVenta = Convert.ToDecimal(row["PrecioVenta"]);
+                        producto.Stock = Convert.ToInt32(row["Stock"]);
+                        producto.IdUsuario = Convert.ToInt32(row["IdUsuario"]);
+
+                        // Asignar el objeto Usuario a través de la propiedad IdUsuarioNavigation
+                        producto.IdUsuarioNavigation = new Usuario()
+                        {
+                            Apellido = row["Apellido"].ToString(),
+                            Nombre = row["Nombre"].ToString()
+                        };
+
+                        productos.Add(producto);
+                    }
+
+                }
+            }
+            return productos;
+        }
+
         // Método que crea e inicializa un objeto de clase Producto con los valores provistos por un objeto SqlDataReader que previamente accedío a la BD.
         private Producto InicializarProductoDesdeBD(SqlDataReader dataReader)
         {
@@ -178,7 +235,7 @@ namespace ProyectoFinalCoderHouse.Repository
 
 
         // Método que debe traer el producto cargado en la base cuyo Id = id
-        public Producto TraerProducto_conId(int id)
+        public Producto TraerProductoPorID(int id)
         {
             Producto producto = new Producto(); // Creo un objeto de clase Producto. Va a ser lo que devuelva el método.
 

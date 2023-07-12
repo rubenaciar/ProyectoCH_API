@@ -37,6 +37,9 @@ namespace ProyectoFinalCoderHouse.Models
 
         public int IdVenta { get; set; } // Identificador de la venta a la que pertenece el producto vendido
 
+        public virtual Producto IdProductoNavigation { get; set; }
+
+        public virtual Venta IdVentaNavigation { get; set; }
         #endregion
     }
 }

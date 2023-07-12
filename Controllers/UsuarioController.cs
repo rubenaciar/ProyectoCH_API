@@ -58,9 +58,8 @@ namespace ProyectoFinalCoderHouse.Controllers
         }
 
 
-
         /// <summary>
-        /// Traer datos de un Usuario ingresando el nombre de usuario.
+        /// Traer datos de un Usuario ingresando su nombre de usuario.
         /// </summary>
         /// <returns></returns>
         [HttpGet("{nombreUsuario}")]
@@ -71,6 +70,7 @@ namespace ProyectoFinalCoderHouse.Controllers
             return usuario == null ? new Usuario() : usuario;
         }
 
+
         /// <summary>
         /// Crear un Usuario nuevo.
         /// </summary>
@@ -78,37 +78,31 @@ namespace ProyectoFinalCoderHouse.Controllers
         [HttpPost]
         public IActionResult PostUsuario([FromBody]Usuario usuario)
         {
+
             try
             {
-                try
-                {
-                    if (!Usuario.IsValidaContraseña(usuario.Contraseña, iLargoContraseña))
-                    {
-                        throw new ContraseñaInvalidaException("Contraseña inválida: debe tener un mínimo de 8 caracteres e incluir: 0-9, A-Z, a-z y un carácter especial.");
-                    }
+                // Se lanzarán excepciones en el constructor de Usuario si los parámetros no son válidos
+                Usuario nuevoUsuario = new Usuario(usuario.Id, usuario.Nombre, usuario.Apellido, usuario.NombreUsuario, usuario.Contraseña, usuario.Mail);
 
-                    _usuarioHandler.CrearUsuario(usuario);
-                    return Ok(); // Devuelve una respuesta HTTP 200 OK si el usuario se crea correctamente
-                }
-                catch (ContraseñaInvalidaException ex)
-                {
-                    return BadRequest(ex.Message); // Devuelve una respuesta HTTP 400 Bad Request con el mensaje de error de la contraseña
-                }
-                catch (Exception ex)
-                {
-                    // Manejo de otras excepciones específicas que desees capturar y manejar
-                    // ...
-
-                    // Devuelve una respuesta HTTP 500 Internal Server Error genérica
-                    return StatusCode(500, "Ocurrió un error interno.");
-                }
+                _usuarioHandler.CrearUsuario(nuevoUsuario);
+                return Ok(); // Devuelve una respuesta HTTP 200 OK si el usuario se crea correctamente
             }
-            catch (Exception)
+            catch (ArgumentException ex)
             {
-                // Captura cualquier excepción no controlada que ocurra dentro del bloque try principal
-                // y devuelve una respuesta HTTP 500 Internal Server Error genérica
-                return StatusCode(500, "Ocurrió un error interno.");
+                return BadRequest(ex.Message); // Devuelve una respuesta HTTP 400 Bad Request con el mensaje de error
             }
+            catch (ContraseñaInvalidaException ex)
+            {
+                return BadRequest(ex.Message); // Devuelve una respuesta HTTP 400 Bad Request con el mensaje de error de la contraseña
+            }
+            catch (Exception ex)
+            {
+
+                // Devuelve una respuesta HTTP 500 Internal Server Error genérica
+                return StatusCode(500, "Ocurrió un error interno.");
+             }
+            
+          
         }
 
         /// <summary>
@@ -122,7 +116,7 @@ namespace ProyectoFinalCoderHouse.Controllers
         }
 
         /// <summary>
-        /// Eliminar un Usuario existente por ID.
+        /// Eliminar un Usuario existente ingresando el ID.
         /// </summary>
         /// <returns></returns>
         [HttpDelete("{idUsuario}")]
