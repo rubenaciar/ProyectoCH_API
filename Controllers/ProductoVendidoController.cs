@@ -28,5 +28,15 @@ namespace ProyectoFinalCoderHouse.Controllers
 
        
         }
+
+        /// <summary>
+        /// Traer los Productos Vendidos por un Usuario ingresando su ID.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{idProducto}")]
+        public IEnumerable<Producto> GetProductosPorIdProducto(int idProducto)
+        {
+            return _productoVendidoHandler.TraerProductosPorIdProducto(idProducto);
+        }
     }
 }

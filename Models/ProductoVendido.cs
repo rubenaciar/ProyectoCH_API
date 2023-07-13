@@ -6,13 +6,13 @@ namespace ProyectoFinalCoderHouse.Models
     public class ProductoVendido
     {
         #region Atributos
-        private int _id;
+        private long _id;
         private int _stock;
-        private int _idProducto;
-        private int _idVenta;
+        private long _idProducto;
+        private long _idVenta;
         #endregion
         #region Constructores
-        public ProductoVendido(int id, int stock, int idProducto, int idVenta)
+        public ProductoVendido(long id, int stock, long idProducto, long idVenta)
         {
             _id = id;
             _stock = stock;
@@ -30,12 +30,12 @@ namespace ProyectoFinalCoderHouse.Models
         }
         #endregion
         #region Propiedades
-        public int Id { get; set; } // Identificador unico del producto vendido
+        public long Id { get; set; } // Identificador unico del producto vendido
         public int Stock { get; set; } // Cantidad del producto que se vendio
 
-        public int IdProducto { get; set; } // Identificador del producto que se vendio
+        public long IdProducto { get; set; } // Identificador del producto que se vendio
 
-        public int IdVenta { get; set; } // Identificador de la venta a la que pertenece el producto vendido
+        public long IdVenta { get; set; } // Identificador de la venta a la que pertenece el producto vendido
 
         public virtual Producto IdProductoNavigation { get; set; }
 

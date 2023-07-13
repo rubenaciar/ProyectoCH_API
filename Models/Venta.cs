@@ -7,9 +7,9 @@ namespace ProyectoFinalCoderHouse.Models
     public class Venta
     {
         #region Atributos
-        private int _id;
+        private long _id;
         private string _comentarios;
-        private int _idUsuario;
+        private long _idUsuario;
         #endregion
         #region Constructores
         // Constructor por defecto
@@ -29,9 +29,9 @@ namespace ProyectoFinalCoderHouse.Models
         }
         #endregion
         #region Propiedades
-        public int Id { get; set; } // Identificador unico de la venta
+        public long Id { get; set; } // Identificador unico de la venta
         public string Comentarios { get; set; } // Descripciones o comentarios de la venta
-        public int IdUsuario { get; set; } // Identificador del usuario que realizo la venta
+        public long IdUsuario { get; set; } // Identificador del usuario que realizo la venta
 
         public virtual Usuario IdUsuarioNavigation { get; set; }
 

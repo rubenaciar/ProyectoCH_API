@@ -8,7 +8,7 @@ namespace ProyectoFinalCoderHouse.Models
     public class Usuario
     {
         #region Atributos
-        private int _id;
+        private long _id;
         private string _nombre;
         private string _apellido;
         private string _nombreUsuario;
@@ -18,7 +18,7 @@ namespace ProyectoFinalCoderHouse.Models
         #endregion
 
         #region Constructores
-        public Usuario(int id, string nombre, string apellido, string nombreUsuario, string contraseña, string mail)
+        public Usuario(long id, string nombre, string apellido, string nombreUsuario, string contraseña, string mail)
         {
             // Validacion de parametros
             if (string.IsNullOrWhiteSpace(nombre))
@@ -80,7 +80,7 @@ namespace ProyectoFinalCoderHouse.Models
         #region Propiedades
         // Propiedades publicas de la clase, para poder acceder a sus Atributos privados
 
-        public int Id
+        public long Id
         {
             get { return _id; }
             set { _id = value; }

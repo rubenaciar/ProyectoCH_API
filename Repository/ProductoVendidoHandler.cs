@@ -1,10 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
+using ProyectoFinalCoderHouse.Data;
 using ProyectoFinalCoderHouse.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Runtime.Intrinsics.X86;
 
 namespace ProyectoFinalCoderHouse.Repository
 {
@@ -21,6 +26,33 @@ namespace ProyectoFinalCoderHouse.Repository
             _connectionString = configuration.GetConnectionString("connectionDB");
         }
 
+        // Traer lista de productos vendidos por ID de producto
+        public IEnumerable<Producto> TraerProductosPorIdProducto(int idProducto)
+        {
+          
+            using (var dbContext = new SistemaGestionContext())
+            {
+              
+                var listaProductoVendidos = (from pv in dbContext.ProductoVendidos
+                                             join p in dbContext.Productos on pv.IdProducto equals p.Id
+                                             where pv.IdProducto == idProducto
+                                             select new Producto()
+                                             {
+                                                 Id = pv.Id,
+                                                 Stock = pv.Stock,
+                                                 Descripciones = p.Descripciones,
+                                                 PrecioVenta = p.PrecioVenta
+                                             }).ToList();
+
+                // Restaura la validación del certificado SSL al estado predeterminado
+                
+                return listaProductoVendidos;
+            }
+
+        }
+
+
+        //Metodo para traer la lista de productos vendidos
         public List<ProductoVendido> TraerListaProductoVendidos()
         {
 
@@ -75,7 +107,7 @@ namespace ProyectoFinalCoderHouse.Repository
         public bool CargarProductosVendidos(List<ProductoVendido> productosVendidos)
         {
             bool resultado = false;
-            long idProductoVendido = 0;
+            int idProductoVendido = 0;
             int elementosEnLaLista = 0;
             int idValidoEncontrado = 0;
 
@@ -104,7 +136,7 @@ namespace ProyectoFinalCoderHouse.Repository
                         parameterStock.Value = item.Stock;
                         parameterIdUsuario.Value = item.IdVenta;
                         elementosEnLaLista++;
-                        idProductoVendido = Convert.ToInt64(sqlCommand.ExecuteScalar());
+                        idProductoVendido = Convert.ToInt32(sqlCommand.ExecuteScalar());
                         if (idProductoVendido > 0) // Si el Id del objeto ProductoVendido insertado en la tabla es > 0 quiere decir que se inserto correctamente
                         {
                             idValidoEncontrado++;

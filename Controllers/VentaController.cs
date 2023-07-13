@@ -71,7 +71,7 @@ namespace ProyectoFinalCoderHouse.Controllers
 
             // Cargo una nueva venta en la tabla Venta
             Venta venta = new Venta();
-            int idVenta = VentaHandler.CrearVenta(venta);
+            long idVenta = VentaHandler.CrearVenta(venta);
             // Si la Venta se cargó con exito continuo
             if (idVenta >= 0)
             {
@@ -80,7 +80,7 @@ namespace ProyectoFinalCoderHouse.Controllers
                 foreach (PostVenta item in listaDeProductosVendidos)
                 {
                     ProductoVendido productoVendido = new ProductoVendido();
-                    productoVendido.IdProducto = (int)item.Id;
+                    productoVendido.IdProducto = item.Id;
                     productoVendido.Stock = item.Stock;
                     productoVendido.IdVenta = idVenta;
                     productosVendidos.Add(productoVendido);

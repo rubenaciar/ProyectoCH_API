@@ -138,7 +138,7 @@ namespace ProyectoFinalCoderHouse.Repository
         // Método para eliminar un usuario de la Base de Datos según su Id
         // Recibe el Id del usuario que se desea eliminar
         // Devuelve true si la eliminación fue exitosa, false si no
-        public bool EliminarUsuario(int id)
+        public bool EliminarUsuario(long id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {

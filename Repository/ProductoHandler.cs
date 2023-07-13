@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 
 namespace ProyectoFinalCoderHouse.Repository
 {
@@ -57,7 +58,7 @@ namespace ProyectoFinalCoderHouse.Repository
         // Método para eliminar un producto de la Base de Datos según su Id
         // Recibe el Id del producto que se desea eliminar
         // Devuelve true si la eliminación fue exitosa, false si no
-        public bool EliminarProducto(int id)
+        public bool EliminarProducto(long id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -138,12 +139,12 @@ namespace ProyectoFinalCoderHouse.Repository
                             while (dr.Read())
                             {
                                 var producto = new Producto();
-                                producto.Id = (int)dr.GetInt64("Id");
+                                producto.Id = dr.GetInt64("Id");
                                 producto.Descripciones = dr.GetString("Descripciones");
                                 producto.Costo = dr.GetDecimal("Costo");
                                 producto.PrecioVenta = dr.GetDecimal("PrecioVenta");
                                 producto.Stock = dr.GetInt32("Stock");
-                                producto.IdUsuario = (int)dr.GetInt64("IdUsuario");
+                                producto.IdUsuario = dr.GetInt64("IdUsuario");
                                 listaProductos.Add(producto);
                             }
                         }
@@ -163,10 +164,10 @@ namespace ProyectoFinalCoderHouse.Repository
 
         }
 
-
+       
         // Método para traer la lista de Productos que fueron ingresador por un IDUsuario
 
-        public List<Producto> TraerProductosPorIdUsuario(int idUsuario)
+        public List<Producto> TraerProductosPorIdUsuario(long idUsuario)
         {
             List<Producto> productos = new List<Producto>();
 
@@ -198,12 +199,12 @@ namespace ProyectoFinalCoderHouse.Repository
                     foreach (DataRow row in table.Rows)
                     {
                         Producto producto = new Producto();
-                        producto.Id = Convert.ToInt32(row["Id"]);
+                        producto.Id = Convert.ToInt64(row["Id"]);
                         producto.Descripciones = row["Descripciones"].ToString();
                         producto.Costo = Convert.ToDecimal(row["Costo"]);
                         producto.PrecioVenta = Convert.ToDecimal(row["PrecioVenta"]);
                         producto.Stock = Convert.ToInt32(row["Stock"]);
-                        producto.IdUsuario = Convert.ToInt32(row["IdUsuario"]);
+                        producto.IdUsuario = Convert.ToInt64(row["IdUsuario"]);
 
                         // Asignar el objeto Usuario a través de la propiedad IdUsuarioNavigation
                         producto.IdUsuarioNavigation = new Usuario()
@@ -224,18 +225,18 @@ namespace ProyectoFinalCoderHouse.Repository
         private Producto InicializarProductoDesdeBD(SqlDataReader dataReader)
         {
             Producto nuevoProducto = new Producto(
-                                            Convert.ToInt32(dataReader["Id"]),
+                                            Convert.ToInt64(dataReader["Id"]),
                                             dataReader["Descripciones"].ToString(),
                                             Convert.ToDecimal(dataReader["Costo"]),
                                             Convert.ToDecimal(dataReader["PrecioVenta"]),
                                             Convert.ToInt32(dataReader["Stock"]),
-                                            Convert.ToInt32(dataReader["IdUsuario"])); // Utilizo el constructor de Producto con los atributos provistos por el objeto SqlDataReader para crear e inicializar un nuevo Producto.
+                                            Convert.ToInt64(dataReader["IdUsuario"])); // Utilizo el constructor de Producto con los atributos provistos por el objeto SqlDataReader para crear e inicializar un nuevo Producto.
             return nuevoProducto;
         }
 
 
         // Método que debe traer el producto cargado en la base cuyo Id = id
-        public Producto TraerProductoPorID(int id)
+        public Producto TraerProductoPorID(long id)
         {
             Producto producto = new Producto(); // Creo un objeto de clase Producto. Va a ser lo que devuelva el método.
 

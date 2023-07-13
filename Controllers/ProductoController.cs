@@ -59,7 +59,7 @@ namespace ProyectoFinalCoderHouse.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpDelete("{idProducto}")]
-        public void DeleteProducto([FromBody] int idProducto)
+        public void DeleteProducto([FromBody] long idProducto)
         {
             _productoHandler.EliminarProducto(idProducto);
         }
@@ -70,7 +70,7 @@ namespace ProyectoFinalCoderHouse.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{idUsuario}")]
-        public IEnumerable<Producto> GetProductosPorIdUsuario(int idUsuario)
+        public IEnumerable<Producto> GetProductosPorIdUsuario(long idUsuario)
         {
             var productos = _productoHandler.TraerProductosPorIdUsuario(idUsuario);
 

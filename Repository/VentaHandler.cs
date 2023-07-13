@@ -52,10 +52,10 @@ namespace ProyectoFinalCoderHouse.Repository
                             {
                                 ProductoVendido productoVendido = new ProductoVendido();
 
-                                productoVendido.Id = Convert.ToInt32(dataReader["Id"]);
+                                productoVendido.Id = Convert.ToInt64(dataReader["Id"]);
                                 productoVendido.Stock = Convert.ToInt32(dataReader["Stock"]);
-                                productoVendido.IdProducto = Convert.ToInt32(dataReader["IdProducto"]);
-                                productoVendido.IdVenta = Convert.ToInt32(dataReader["Idventa"]);
+                                productoVendido.IdProducto = Convert.ToInt64(dataReader["IdProducto"]);
+                                productoVendido.IdVenta = Convert.ToInt64(dataReader["Idventa"]);
 
                                 productosVendidos.Add(productoVendido);
                             }

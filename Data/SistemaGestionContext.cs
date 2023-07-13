@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using ProyectoFinalCoderHouse.Models;
@@ -32,7 +33,7 @@ public partial class SistemaGestionContext : DbContext
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
-
+            
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("connectionDB"));
         }
     }

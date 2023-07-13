@@ -7,12 +7,12 @@ namespace ProyectoFinalCoderHouse.Models
     public class Producto
     {
         #region Atributos
-        private int _id;
+        private long _id;
         private string _descripciones;
         private decimal _costo;
         private decimal _precioVenta;
         private int _stock;
-        private int _idUsuario;
+        private long _idUsuario;
         #endregion
         #region Constructores
 
@@ -30,7 +30,7 @@ namespace ProyectoFinalCoderHouse.Models
             // Mensaje de creacion de la instancia de Producto
             Console.WriteLine("La instancia de Producto se ha creado satisfactoriamente.");
         }
-        public Producto(int id, string descripciones, decimal costo, decimal precioVenta, int stock, int idUsuario)
+        public Producto(long id, string descripciones, decimal costo, decimal precioVenta, int stock, long idUsuario)
         {
             // Validacion de parametros
             if (string.IsNullOrWhiteSpace(descripciones))
@@ -66,12 +66,12 @@ namespace ProyectoFinalCoderHouse.Models
 
 
         #region Propiedades
-        public int Id { get; set; } // Identificador unico del producto
+        public long Id { get; set; } // Identificador unico del producto
         public string Descripciones { get; set; } // Descripciones del producto
         public decimal Costo { get; set; } // Costo de produccion del producto
         public decimal PrecioVenta { get; set; } // Precio de venta del producto
         public int Stock { get; set; } // Cantidad en stock del producto
-        public int IdUsuario { get; set; } // Identificador del usuario que creo el producto
+        public long IdUsuario { get; set; } // Identificador del usuario que creo el producto
         public virtual Usuario IdUsuarioNavigation { get; set; }
 
         public virtual ICollection<ProductoVendido> ProductoVendidos { get; set; } = new List<ProductoVendido>();

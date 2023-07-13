@@ -120,7 +120,7 @@ namespace ProyectoFinalCoderHouse.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpDelete("{idUsuario}")]
-        public void DeleteUsuario(int idUsuario)
+        public void DeleteUsuario(long idUsuario)
         {
             _usuarioHandler.EliminarUsuario(idUsuario);
         }

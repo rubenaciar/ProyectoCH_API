@@ -28,15 +28,21 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.DeleteProducto(System.Int32)">
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.DeleteProducto(System.Int64)">
             <summary>
             Eliminar un Producto existente ingresando el ID.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.GetProductosPorIdUsuario(System.Int32)">
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.GetProductosPorIdUsuario(System.Int64)">
             <summary>
             Traer los productos cargados por un Usuario ingresando su ID.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoVendidoController.GetProductosPorIdProducto(System.Int32)">
+            <summary>
+            Traer los Productos Vendidos por un Usuario ingresando su ID.
             </summary>
             <returns></returns>
         </member>
@@ -70,7 +76,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.DeleteUsuario(System.Int32)">
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.DeleteUsuario(System.Int64)">
             <summary>
             Eliminar un Usuario existente ingresando el ID.
             </summary>
