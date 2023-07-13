@@ -34,7 +34,7 @@ namespace ProyectoFinalCoderHouse.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{idProducto}")]
-        public IEnumerable<Producto> GetProductosPorIdProducto(int idProducto)
+        public IEnumerable<ProductoVendidoInfo> GetProductosPorIdProducto(int idProducto)
         {
             return _productoVendidoHandler.TraerProductosPorIdProducto(idProducto);
         }

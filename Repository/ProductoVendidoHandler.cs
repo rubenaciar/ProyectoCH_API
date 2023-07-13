@@ -26,8 +26,8 @@ namespace ProyectoFinalCoderHouse.Repository
             _connectionString = configuration.GetConnectionString("connectionDB");
         }
 
-        // Traer lista de productos vendidos por ID de producto
-        public IEnumerable<Producto> TraerProductosPorIdProducto(int idProducto)
+        // Traer lista de productos vendidos por ID de producto con LinQ
+        public IEnumerable<ProductoVendidoInfo> TraerProductosPorIdProducto(int idProducto)
         {
           
             using (var dbContext = new SistemaGestionContext())
@@ -35,17 +35,19 @@ namespace ProyectoFinalCoderHouse.Repository
               
                 var listaProductoVendidos = (from pv in dbContext.ProductoVendidos
                                              join p in dbContext.Productos on pv.IdProducto equals p.Id
+                                             //join u in dbContext.Usuarios on p.IdUsuario equals u.Id
                                              where pv.IdProducto == idProducto
-                                             select new Producto()
+                                             select new ProductoVendidoInfo()
                                              {
                                                  Id = pv.Id,
+                                                 Producto = p.Descripciones,
+                                                 Costo = p.Costo,
                                                  Stock = pv.Stock,
-                                                 Descripciones = p.Descripciones,
-                                                 PrecioVenta = p.PrecioVenta
+                                                 PrecioVenta = p.PrecioVenta,
+                                                 Usuario = p.IdUsuarioNavigation.Apellido + "," + p.IdUsuarioNavigation.Nombre
                                              }).ToList();
 
-                // Restaura la validación del certificado SSL al estado predeterminado
-                
+                         
                 return listaProductoVendidos;
             }
 
