@@ -18,25 +18,28 @@ namespace ProyectoFinalCoderHouse.Controllers
             _logger = logger;
             _productoVendidoHandler = productoVendidoHandler;
         }
-        
 
+
+        /// <summary>
+        /// Traer todos los Productos Vendidos
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IEnumerable<ProductoVendido> GetAllProductosVendidos()
         {
-         
-            return _productoVendidoHandler.TraerListaProductoVendidos();
-
-       
+             return _productoVendidoHandler.TraerListaProductoVendidos();
+      
         }
 
+        
         /// <summary>
         /// Traer los Productos Vendidos por un Usuario ingresando su ID.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("{idProducto}")]
-        public IEnumerable<ProductoVendidoInfo> GetProductosPorIdProducto(int idProducto)
+        [HttpGet("{idUsuario}")]
+        public IEnumerable<ProductoVendidoInfo> GetProductosPorIdUsuario(long idUsuario)
         {
-            return _productoVendidoHandler.TraerProductosPorIdProducto(idProducto);
+            return _productoVendidoHandler.TraerProductosPorIdUsuario(idUsuario);
         }
     }
 }

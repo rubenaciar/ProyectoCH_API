@@ -26,8 +26,21 @@ namespace ProyectoFinalCoderHouse.Controllers
             _usuarioHandler = usuarioHandler;
             _productoVendidoHandler = productoVendidoHandler;
         }
-       
 
+        /// <summary>
+        /// Traer las Ventas por Usuario ingresando su ID.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{idUsuario}")]
+        public IEnumerable<VentaInfo> GetVentas(long idUsuario)
+        {
+            return _ventaHandler.TraerVentasPorIdUsuario(idUsuario);
+        }
+
+        /// <summary>
+        /// Traer todas las Ventas.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet(Name = "TraerVentas")]
         public List<ProductoVendido> TraerVentas()
         {

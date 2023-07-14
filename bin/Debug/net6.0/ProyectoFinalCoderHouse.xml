@@ -40,7 +40,13 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoVendidoController.GetProductosPorIdProducto(System.Int32)">
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoVendidoController.GetAllProductosVendidos">
+            <summary>
+            Traer todos los Productos Vendidos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoVendidoController.GetProductosPorIdUsuario(System.Int64)">
             <summary>
             Traer los Productos Vendidos por un Usuario ingresando su ID.
             </summary>
@@ -79,6 +85,18 @@
         <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.DeleteUsuario(System.Int64)">
             <summary>
             Eliminar un Usuario existente ingresando el ID.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.VentaController.GetVentas(System.Int64)">
+            <summary>
+            Traer las Ventas por Usuario ingresando su ID.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.VentaController.TraerVentas">
+            <summary>
+            Traer todas las Ventas.
             </summary>
             <returns></returns>
         </member>

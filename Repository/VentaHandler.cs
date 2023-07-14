@@ -5,6 +5,8 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using ProyectoFinalCoderHouse.Data;
+using System.Linq;
 
 namespace ProyectoFinalCoderHouse.Repository
 {
@@ -26,6 +28,32 @@ namespace ProyectoFinalCoderHouse.Repository
 
 
         // Método que trae todas las ventas de la BD que contienen productos de un determinado Usuario.
+
+        // Traer lista de productos vendidos por ID de producto con LinQ
+        public IEnumerable<VentaInfo> TraerVentasPorIdUsuario(long idUsuario)
+        {
+      
+            using (var _dbContext = new SistemaGestionContext())
+            {
+
+                var listaVentas = (from u in _dbContext.Usuarios
+                                    join v in _dbContext.Venta on u.Id equals v.IdUsuario
+
+                                             where u.Id == idUsuario
+                                             select new VentaInfo()
+                                             {
+                                                 Id = v.Id,
+                                                 Comentarios = v.Comentarios,
+                                                 IdUsuario = v.IdUsuario,
+                                                 Usuario = v.IdUsuarioNavigation.Apellido + "," + v.IdUsuarioNavigation.Nombre
+                                             }).ToList();         
+
+
+                return listaVentas;
+            }
+
+        }
+
         // Método que trae todas los ProductoVendido de la BD que estén asociados a una venta.
         public List<ProductoVendido> TraerVentas()
         {

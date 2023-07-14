@@ -27,27 +27,28 @@ namespace ProyectoFinalCoderHouse.Repository
         }
 
         // Traer lista de productos vendidos por ID de producto con LinQ
-        public IEnumerable<ProductoVendidoInfo> TraerProductosPorIdProducto(int idProducto)
+        public IEnumerable<ProductoVendidoInfo> TraerProductosPorIdUsuario(long idUsuario)
         {
           
-            using (var dbContext = new SistemaGestionContext())
+            using (var _dbContext = new SistemaGestionContext())
             {
               
-                var listaProductoVendidos = (from pv in dbContext.ProductoVendidos
-                                             join p in dbContext.Productos on pv.IdProducto equals p.Id
-                                             //join u in dbContext.Usuarios on p.IdUsuario equals u.Id
-                                             where pv.IdProducto == idProducto
+                var listaProductoVendidos = (from p in _dbContext.Productos
+                                             join pv in _dbContext.ProductoVendidos on p.Id equals pv.IdProducto
+ 
+                                             where p.IdUsuario == idUsuario
                                              select new ProductoVendidoInfo()
                                              {
-                                                 Id = pv.Id,
+                                                 Id = p.Id,
                                                  Producto = p.Descripciones,
-                                                 Costo = p.Costo,
                                                  Stock = pv.Stock,
                                                  PrecioVenta = p.PrecioVenta,
-                                                 Usuario = p.IdUsuarioNavigation.Apellido + "," + p.IdUsuarioNavigation.Nombre
+                                                 Usuario = p.IdUsuarioNavigation.Apellido + "," + p.IdUsuarioNavigation.Nombre,
+                                                 IdVenta = pv.IdVenta
                                              }).ToList();
+                
 
-                         
+
                 return listaProductoVendidos;
             }
 

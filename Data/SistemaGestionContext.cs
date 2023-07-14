@@ -100,6 +100,8 @@ public partial class SistemaGestionContext : DbContext
                 .HasForeignKey(d => d.IdUsuario)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Venta_Usuario");
+
+          
         });
 
         OnModelCreatingPartial(modelBuilder);
