@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using ProyectoFinalCoderHouse.Models;
 
-namespace ProyectoFinalCoderHouse.Data;
+namespace ProyectoFinalCoderHouse.EntityORM;
 
 public partial class SistemaGestionContext : DbContext
 {
@@ -33,7 +33,7 @@ public partial class SistemaGestionContext : DbContext
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
-            
+
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("connectionDB"));
         }
     }
@@ -101,7 +101,7 @@ public partial class SistemaGestionContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Venta_Usuario");
 
-          
+
         });
 
         OnModelCreatingPartial(modelBuilder);

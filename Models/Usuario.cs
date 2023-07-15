@@ -67,8 +67,7 @@ namespace ProyectoFinalCoderHouse.Models
             _nombreUsuario = string.Empty;
             _contraseña = string.Empty;
             _mail = string.Empty;
-            EsValido = false;
-            MensajeLogin = null;
+           
 
 
             // Mensaje de creacion de la instancia de Usuario

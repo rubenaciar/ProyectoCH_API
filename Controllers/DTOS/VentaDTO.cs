@@ -1,6 +1,6 @@
-﻿namespace ProyectoFinalCoderHouse.Models;
+﻿namespace ProyectoFinalCoderHouse.Controllers.DTOS;
 
-public partial class VentaInfo
+public partial class VentaDTO
 {
     public long Id { get; set; } // Identificador unico de la venta
     public string Comentarios { get; set; } // Descripciones o comentarios de la venta

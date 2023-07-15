@@ -5,7 +5,7 @@ using ProyectoFinalCoderHouse.Controllers.DTOS;
 using ProyectoFinalCoderHouse.Models;
 using ProyectoFinalCoderHouse.Repository;
 using Microsoft.EntityFrameworkCore;
-using ProyectoFinalCoderHouse.Data;
+using ProyectoFinalCoderHouse.EntityORM;
 using System;
 
 namespace ProyectoFinalCoderHouse.Controllers
@@ -35,22 +35,29 @@ namespace ProyectoFinalCoderHouse.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{idUsuario}")]
-        public IEnumerable<VentaInfo> GetVentas(long idUsuario)
+        public IEnumerable<VentaDTO> GetVentas(long idUsuario)
         {
             return _ventaHandler.TraerVentasPorIdUsuario(idUsuario);
         }
 
       
-
-
         /// <summary>
-        /// Realizar una Venta enviando una la Lista de Productos Vendidos para el Usuario ingresando su ID.
+        /// Realizar una Venta enviando una la Lista de Productos con el Usuario ingresando su ID.
         /// </summary>
         /// <returns></returns>
         [HttpPost("{idUsuario}")]
         public bool PostVenta([FromBody] List<PostVenta> productosvendidos, long idUsuario)
         {
+            var usuario = _usuarioHandler.TraerUsuarioPorId(idUsuario);
+
+            if (usuario.Id <= 0) // Verifico que el Id de Usuario asociado a la venta se encuentre en la BD
+            {
+                return false;
+            }
             return _ventaHandler.CargarVenta(productosvendidos, idUsuario);
+          
+            
+
         }
 
         /// <summary>

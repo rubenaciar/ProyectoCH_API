@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ProyectoFinalCoderHouse.Controllers.DTOS;
 using ProyectoFinalCoderHouse.Models;
 using ProyectoFinalCoderHouse.Repository;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace ProyectoFinalCoderHouse.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{idUsuario}")]
-        public IEnumerable<ProductoVendidoInfo> GetProductosPorIdUsuario(long idUsuario)
+        public IEnumerable<ProductoVendidoDTO> GetProductosPorIdUsuario(long idUsuario)
         {
             return _productoVendidoHandler.TraerProductosPorIdUsuario(idUsuario);
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
-using ProyectoFinalCoderHouse.Data;
+using ProyectoFinalCoderHouse.Controllers.DTOS;
+using ProyectoFinalCoderHouse.EntityORM;
 using ProyectoFinalCoderHouse.Models;
 using System;
 using System.Collections;
@@ -27,7 +28,7 @@ namespace ProyectoFinalCoderHouse.Repository
         }
 
         // Traer lista de productos vendidos por ID de producto con LinQ
-        public IEnumerable<ProductoVendidoInfo> TraerProductosPorIdUsuario(long idUsuario)
+        public IEnumerable<ProductoVendidoDTO> TraerProductosPorIdUsuario(long idUsuario)
         {
           
             using (var _dbContext = new SistemaGestionContext())
@@ -37,7 +38,7 @@ namespace ProyectoFinalCoderHouse.Repository
                                              join pv in _dbContext.ProductoVendidos on p.Id equals pv.IdProducto
  
                                              where p.IdUsuario == idUsuario
-                                             select new ProductoVendidoInfo()
+                                             select new ProductoVendidoDTO()
                                              {
                                                  Id = p.Id,
                                                  Producto = p.Descripciones,

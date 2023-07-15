@@ -7,9 +7,10 @@ using Microsoft.OpenApi.Models;
 using System;
 using Microsoft.EntityFrameworkCore;
 using ProyectoFinalCoderHouse.Repository;
-using ProyectoFinalCoderHouse.Data;
 using System.IO;
 using System.Reflection;
+using ProyectoFinalCoderHouse.EntityORM;
+
 namespace ProyectoFinalCoderHouse
 {
     public class Startup
@@ -45,7 +46,7 @@ namespace ProyectoFinalCoderHouse
             });
 
             var ConnectionString = Configuration.GetConnectionString("connectionDB");
-
+            //INYECCION DE DEPENDENCIAS PARA LA CONEXION A LA BASE DE DATOS Y CRUD
             services.AddDbContext<SistemaGestionContext>(options => options.UseSqlServer(ConnectionString));
             services.AddScoped<VentaHandler>();
             services.AddScoped<ProductoHandler>();

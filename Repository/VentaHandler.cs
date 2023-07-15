@@ -5,7 +5,8 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.IO;
-using ProyectoFinalCoderHouse.Data;
+using ProyectoFinalCoderHouse.EntityORM;
+using ProyectoFinalCoderHouse.Repository;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ using ProyectoFinalCoderHouse.Controllers.DTOS;
 
 namespace ProyectoFinalCoderHouse.Repository
 {
-    
+
     public class VentaHandler
     {
 
@@ -32,18 +33,34 @@ namespace ProyectoFinalCoderHouse.Repository
 
         // Método que trae todas las ventas de la BD que contienen productos de un determinado Usuario.
 
-        public bool CargarVenta(List<PostVenta> productosvendidos,long idUsuario)
+        public bool CargarVenta(List<PostVenta> productosvendidos, long idUsuario)
         {
+           
             try
             {
                 using (var _context = new SistemaGestionContext())
                 {
+                    //Usuario usuario = _context.Usuarios.Find(idUsuario);
+                    //if (usuario == null)
+                    //{
+                    //    return false; // Verificación del Id de Usuario en la base de datos
+                    //}
+                   
                     if (productosvendidos.Count == 0)
                     {
                         return false; // Manejo de error si la lista de productos está vacía
                     }
 
+                    foreach (var producto in productosvendidos)
+                    {
+                        Producto productoExistente = _context.Productos.Find(producto.IdProducto);
 
+                        if (productoExistente == null || producto.Stock <= 0 || productoExistente.Stock < producto.Stock)
+                        {
+                            return false; // Validaciones de los datos recibidos
+                        }
+                        
+                    }
                     // Crea una nueva instancia de Venta con los datos necesarios
                     Venta venta = new Venta
                     {
@@ -123,7 +140,7 @@ namespace ProyectoFinalCoderHouse.Repository
         }
 
         // Traer lista de productos vendidos por ID de producto con LinQ
-        public IEnumerable<VentaInfo> TraerVentasPorIdUsuario(long idUsuario)
+        public IEnumerable<VentaDTO> TraerVentasPorIdUsuario(long idUsuario)
         {
       
             using (var _dbContext = new SistemaGestionContext())
@@ -133,7 +150,7 @@ namespace ProyectoFinalCoderHouse.Repository
                                     join v in _dbContext.Venta on u.Id equals v.IdUsuario
 
                                              where u.Id == idUsuario
-                                             select new VentaInfo()
+                                             select new VentaDTO()
                                              {
                                                  Id = v.Id,
                                                  Comentarios = v.Comentarios,
