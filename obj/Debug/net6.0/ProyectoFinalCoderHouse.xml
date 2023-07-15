@@ -94,6 +94,18 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.VentaController.PostVenta(System.Collections.Generic.List{ProyectoFinalCoderHouse.Controllers.DTOS.PostVenta},System.Int64)">
+            <summary>
+            Realizar una Venta enviando una la Lista de Productos Vendidos para el Usuario ingresando su ID.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.VentaController.DeleteProducto(System.Int64)">
+            <summary>
+            Eliminar una Venta existente ingresando el ID.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:ProyectoFinalCoderHouse.Controllers.VentaController.TraerVentas">
             <summary>
             Traer todas las Ventas.

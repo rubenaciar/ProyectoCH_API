@@ -7,6 +7,9 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using ProyectoFinalCoderHouse.Data;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ProyectoFinalCoderHouse.Controllers.DTOS;
 
 namespace ProyectoFinalCoderHouse.Repository
 {
@@ -28,6 +31,96 @@ namespace ProyectoFinalCoderHouse.Repository
 
 
         // Método que trae todas las ventas de la BD que contienen productos de un determinado Usuario.
+
+        public bool CargarVenta(List<PostVenta> productosvendidos,long idUsuario)
+        {
+            try
+            {
+                using (var _context = new SistemaGestionContext())
+                {
+                    if (productosvendidos.Count == 0)
+                    {
+                        return false; // Manejo de error si la lista de productos está vacía
+                    }
+
+
+                    // Crea una nueva instancia de Venta con los datos necesarios
+                    Venta venta = new Venta
+                    {
+                        Comentarios = "",
+                        IdUsuario = idUsuario
+                    };
+
+                    // Agrega la venta al contexto
+                    _context.Venta.Add(venta);
+
+                    // Guarda la venta en la base de datos para generar su ID automáticamente
+                    _context.SaveChanges();
+
+                    foreach (var producto in productosvendidos)
+                    {
+                        Producto productoExistente = _context.Productos.Find(producto.IdProducto);
+
+                        if (productoExistente != null)
+                        {
+                            ProductoVendido productoVendido = new ProductoVendido
+                            {
+                                IdProducto = producto.IdProducto,
+                                IdVenta = venta.Id,
+                                Stock = producto.Stock
+                            };
+
+                            // Agrega el producto vendido al contexto
+                            _context.ProductoVendidos.Add(productoVendido);
+
+                            // Actualiza el stock del producto en la tabla "Productos"
+                            productoExistente.Stock -= producto.Stock;
+                            _context.Entry(productoExistente).State = EntityState.Modified;
+                        }
+                        else
+                        {
+                            return false; // Manejo de error si el producto no se encuentra en la base de datos
+                        }
+                    }
+
+                    // Asigna el valor generado automáticamente del campo Id al campo Comentarios
+                    venta.Comentarios = $"Comentarios Venta {venta.Id}";
+
+                    // Guarda los cambios en la base de datos
+                    _context.SaveChanges();
+
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false; // Manejo de error genérico
+            }
+        }
+
+        // Método para eliminar un VENTA la Base de Datos según su Id
+        // Recibe el Id del VENTA que se desea eliminar
+        // Devuelve true si la eliminación fue exitosa, false si no
+        public bool EliminarVenta(long id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                // Definimos la consulta SQL que vamos a ejecutar
+                const string query = @"DELETE FROM Venta WHERE Id = @Id";
+                // Creamos una nueva instancia de SqlCommand con la consulta SQL y la conexión asociada
+                using (var command = new SqlCommand(query, connection))
+                {
+                    // Agregamos el parámetro correspondiente a la consulta SQL utilizando el Id recibido como parámetro
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    // Ejecutamos la consulta SQL utilizando ExecuteNonQuery() que retorna la cantidad de filas afectadas por la consulta SQL
+                    // En este caso, debería ser 1 si se eliminó el producto correctamente, o 0 si no se encontró el producto con el Id correspondiente
+                    return command.ExecuteNonQuery() > 0;
+                }
+            }
+        }
 
         // Traer lista de productos vendidos por ID de producto con LinQ
         public IEnumerable<VentaInfo> TraerVentasPorIdUsuario(long idUsuario)
@@ -97,35 +190,6 @@ namespace ProyectoFinalCoderHouse.Repository
 
 
 
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-
-        // Método que recibe como parámetro una Venta y debe cargarla en BD.
-        public static int CrearVenta(Venta venta)
-        {
-           
-            int idVenta = 0;
-
-            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
-            {
-                string queryInsert = "INSERT INTO [SistemaGestion].[dbo].[Venta] (Comentarios) " + // Query que me permite agregar una Venta.
-                                        "VALUES (@comentarios) " +
-                                        "SELECT @@IDENTITY";
-
-                var parameterComentarios = new SqlParameter("comentarios", SqlDbType.VarChar);
-                parameterComentarios.Value = venta.Comentarios;
-
-                sqlConnection.Open();
-
-                using (SqlCommand sqlCommand = new SqlCommand(queryInsert, sqlConnection))
-                {
-                    sqlCommand.Parameters.Add(parameterComentarios);
-                    idVenta = Convert.ToInt32(sqlCommand.ExecuteScalar());
-                }
-                sqlConnection.Close();
-            }
-            return idVenta;
-        }
 
     }
 }

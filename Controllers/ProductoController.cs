@@ -59,7 +59,7 @@ namespace ProyectoFinalCoderHouse.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpDelete("{idProducto}")]
-        public void DeleteProducto([FromBody] long idProducto)
+        public void DeleteProducto(long idProducto)
         {
             _productoHandler.EliminarProducto(idProducto);
         }
