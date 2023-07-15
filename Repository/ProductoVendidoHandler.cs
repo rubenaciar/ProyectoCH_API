@@ -1,24 +1,72 @@
-﻿using ProyectoFinalCoderHouse.Models;
+﻿using Microsoft.Extensions.Configuration;
+using ProyectoFinalCoderHouse.Controllers.DTOS;
+using ProyectoFinalCoderHouse.EntityORM;
+using ProyectoFinalCoderHouse.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Runtime.Intrinsics.X86;
 
 namespace ProyectoFinalCoderHouse.Repository
 {
-    public static class ProductoVendidoHandler
+    public class ProductoVendidoHandler
     {
-        public static string ConnectionString = @"Server=P533750\SQLEXPRESS;Database=SistemaGestion;Trusted_Connection=True;";
-        public static List<ProductoVendido> TraerListaProductoVendidos()
+        private static readonly string _connectionString;
+        static ProductoVendidoHandler()
+        {
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            _connectionString = configuration.GetConnectionString("connectionDB");
+        }
+
+        // Traer lista de productos vendidos por ID de producto con LinQ
+        public IEnumerable<ProductoVendidoDTO> TraerProductosPorIdUsuario(long idUsuario)
+        {
+          
+            using (var _dbContext = new SistemaGestionContext())
+            {
+              
+                var listaProductoVendidos = (from p in _dbContext.Productos
+                                             join pv in _dbContext.ProductoVendidos on p.Id equals pv.IdProducto
+ 
+                                             where p.IdUsuario == idUsuario
+                                             select new ProductoVendidoDTO()
+                                             {
+                                                 Id = p.Id,
+                                                 Producto = p.Descripciones,
+                                                 Stock = pv.Stock,
+                                                 PrecioVenta = p.PrecioVenta,
+                                                 Usuario = p.IdUsuarioNavigation.Apellido + "," + p.IdUsuarioNavigation.Nombre,
+                                                 IdVenta = pv.IdVenta
+                                             }).ToList();
+                
+
+
+                return listaProductoVendidos;
+            }
+
+        }
+
+
+        //Metodo para traer la lista de productos vendidos
+        public List<ProductoVendido> TraerListaProductoVendidos()
         {
 
-            //string connectionString = @"Server=P533750\SQLEXPRESS;Database=SistemaGestion;Trusted_Connection=True;";
+         
             var query = "SELECT Id,Stock,IdProducto,IdVenta FROM ProductoVendido";
             var listaProductoVendidos = new List<ProductoVendido>();
 
             //Creamos una instancia de conexión utilizando el string a nuestra BD, usando using para limpiar los recursos
 
-            using (SqlConnection conect = new SqlConnection(ConnectionString))
+            using (SqlConnection conect = new SqlConnection(_connectionString))
             {
                 // Abrimos nuestra conexion a la BD
                 conect.Open();
@@ -60,14 +108,14 @@ namespace ProyectoFinalCoderHouse.Repository
         }
 
         // Método que recibe una lista de objetos de clase ProductoVendido y debe cargar los mismos en la tabla ProductoVendido en BD. Se utiliza para poder ejecutar el segundo paso de CargarVenta().
-        public static bool CargarProductosVendidos(List<ProductoVendido> productosVendidos)
+        public bool CargarProductosVendidos(List<ProductoVendido> productosVendidos)
         {
             bool resultado = false;
-            long idProductoVendido = 0;
+            int idProductoVendido = 0;
             int elementosEnLaLista = 0;
             int idValidoEncontrado = 0;
 
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
                 string queryInsert = "INSERT INTO [SistemaGestion].[dbo].[ProductoVendido] (IdProducto, Stock, IdVenta) " + // Query que me permite agregar un ProductoVendido.
                                         "VALUES (@idProducto, @stock, @idventa) " +
@@ -92,7 +140,7 @@ namespace ProyectoFinalCoderHouse.Repository
                         parameterStock.Value = item.Stock;
                         parameterIdUsuario.Value = item.IdVenta;
                         elementosEnLaLista++;
-                        idProductoVendido = Convert.ToInt64(sqlCommand.ExecuteScalar());
+                        idProductoVendido = Convert.ToInt32(sqlCommand.ExecuteScalar());
                         if (idProductoVendido > 0) // Si el Id del objeto ProductoVendido insertado en la tabla es > 0 quiere decir que se inserto correctamente
                         {
                             idValidoEncontrado++;

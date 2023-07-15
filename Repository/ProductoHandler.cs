@@ -1,24 +1,36 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Configuration;
 using ProyectoFinalCoderHouse.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection.PortableExecutable;
+using System.IO;
+using System.Linq;
 
 namespace ProyectoFinalCoderHouse.Repository
 {
-    public static class ProductoHandler
+    public class ProductoHandler
     {
-        public static string ConnectionString = @"Server=P533750\SQLEXPRESS;Database=SistemaGestion;Trusted_Connection=True;";
+        private static readonly string _connectionString;
+        static ProductoHandler()
+        {
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            _connectionString = configuration.GetConnectionString("connectionDB");
+        }
+
+
+
         // Método para insertar un nuevo Producto en la Base de Datos
         // Recibe un objeto Producto con la información del Producto a crear
         // Devuelve el Id asignado al nuevo registro
-        public static int CrearProducto(Producto producto)
+        public int CrearProducto(Producto producto)
         {
             // Creamos una nueva conexión a la base de datos utilizando el string de conexión que se recibió en el constructor
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 // Abrimos la conexión
                 connection.Open();
@@ -46,9 +58,9 @@ namespace ProyectoFinalCoderHouse.Repository
         // Método para eliminar un producto de la Base de Datos según su Id
         // Recibe el Id del producto que se desea eliminar
         // Devuelve true si la eliminación fue exitosa, false si no
-        public static bool EliminarProducto(int id)
+        public bool EliminarProducto(long id)
         {
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
@@ -71,9 +83,9 @@ namespace ProyectoFinalCoderHouse.Repository
         // Recibe un objeto producto con la información actualizada del producto a modificar
         // Devuelve true si la modificación fue exitosa, false si no
 
-        public static bool ModificarProducto(Producto producto)
+        public bool ModificarProducto(Producto producto)
         {
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
@@ -100,16 +112,16 @@ namespace ProyectoFinalCoderHouse.Repository
             }
         }
 
-        public static List<Producto> TraerListaProductos()
+        public List<Producto> TraerListaProductos()
         {
 
-            //string connectionString = @"Server=P533750\SQLEXPRESS;Database=SistemaGestion;Trusted_Connection=True;";
+        
             var query = "SELECT Id,Descripciones,Costo,PrecioVenta,Stock,IdUsuario FROM Producto";
             List<Producto> listaProductos = new List<Producto>();
 
             //Creamos una instancia de conexión utilizando el string a nuestra BD, usando using para limpiar los recursos
 
-            using (SqlConnection conect = new SqlConnection(ConnectionString))
+            using (SqlConnection conect = new SqlConnection(_connectionString))
             {
                 // Abrimos nuestra conexion a la BD
                 conect.Open();
@@ -127,12 +139,12 @@ namespace ProyectoFinalCoderHouse.Repository
                             while (dr.Read())
                             {
                                 var producto = new Producto();
-                                producto.Id = (int)dr.GetInt64("Id");
+                                producto.Id = dr.GetInt64("Id");
                                 producto.Descripciones = dr.GetString("Descripciones");
                                 producto.Costo = dr.GetDecimal("Costo");
                                 producto.PrecioVenta = dr.GetDecimal("PrecioVenta");
                                 producto.Stock = dr.GetInt32("Stock");
-                                producto.IdUsuario = (int)dr.GetInt64("IdUsuario");
+                                producto.IdUsuario = dr.GetInt64("IdUsuario");
                                 listaProductos.Add(producto);
                             }
                         }
@@ -152,22 +164,79 @@ namespace ProyectoFinalCoderHouse.Repository
 
         }
 
+       
+        // Método para traer la lista de Productos que fueron ingresador por un IDUsuario
+
+        public List<Producto> TraerProductosPorIdUsuario(long idUsuario)
+        {
+            List<Producto> productos = new List<Producto>();
+
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand())
+                {
+                    sqlCommand.Connection = sqlConnection;
+                    sqlCommand.Connection.Open();
+                    sqlCommand.CommandText = @"SELECT Prod.[Id]
+                                                  ,Prod.[Descripciones]
+                                                  ,Prod.[Costo]
+                                                  ,Prod.[PrecioVenta]
+                                                  ,Prod.[Stock]
+                                                  ,Prod.[IdUsuario]
+	                                              ,Usuario.Apellido
+                                                  ,Usuario.Nombre
+                                                  FROM [Producto] Prod
+                                                  INNER JOIN [Usuario] ON Prod.[IdUsuario] = Usuario.[Id]
+                                                  WHERE IdUsuario = @idUsuario;";
+
+                    sqlCommand.Parameters.AddWithValue("@idUsuario", idUsuario);
+
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                    dataAdapter.SelectCommand = sqlCommand;
+                    DataTable table = new DataTable();
+                    dataAdapter.Fill(table); //Se ejecuta el Select
+                    sqlCommand.Connection.Close();
+                    foreach (DataRow row in table.Rows)
+                    {
+                        Producto producto = new Producto();
+                        producto.Id = Convert.ToInt64(row["Id"]);
+                        producto.Descripciones = row["Descripciones"].ToString();
+                        producto.Costo = Convert.ToDecimal(row["Costo"]);
+                        producto.PrecioVenta = Convert.ToDecimal(row["PrecioVenta"]);
+                        producto.Stock = Convert.ToInt32(row["Stock"]);
+                        producto.IdUsuario = Convert.ToInt64(row["IdUsuario"]);
+
+                        // Asignar el objeto Usuario a través de la propiedad IdUsuarioNavigation
+                        producto.IdUsuarioNavigation = new Usuario()
+                        {
+                            Apellido = row["Apellido"].ToString(),
+                            Nombre = row["Nombre"].ToString()
+                        };
+
+                        productos.Add(producto);
+                    }
+
+                }
+            }
+            return productos;
+        }
+
         // Método que crea e inicializa un objeto de clase Producto con los valores provistos por un objeto SqlDataReader que previamente accedío a la BD.
-        private static Producto InicializarProductoDesdeBD(SqlDataReader dataReader)
+        private Producto InicializarProductoDesdeBD(SqlDataReader dataReader)
         {
             Producto nuevoProducto = new Producto(
-                                            Convert.ToInt32(dataReader["Id"]),
+                                            Convert.ToInt64(dataReader["Id"]),
                                             dataReader["Descripciones"].ToString(),
                                             Convert.ToDecimal(dataReader["Costo"]),
                                             Convert.ToDecimal(dataReader["PrecioVenta"]),
                                             Convert.ToInt32(dataReader["Stock"]),
-                                            Convert.ToInt32(dataReader["IdUsuario"])); // Utilizo el constructor de Producto con los atributos provistos por el objeto SqlDataReader para crear e inicializar un nuevo Producto.
+                                            Convert.ToInt64(dataReader["IdUsuario"])); // Utilizo el constructor de Producto con los atributos provistos por el objeto SqlDataReader para crear e inicializar un nuevo Producto.
             return nuevoProducto;
         }
 
 
         // Método que debe traer el producto cargado en la base cuyo Id = id
-        public static Producto TraerProducto_conId(int id)
+        public Producto TraerProductoPorID(long id)
         {
             Producto producto = new Producto(); // Creo un objeto de clase Producto. Va a ser lo que devuelva el método.
 
@@ -177,7 +246,7 @@ namespace ProyectoFinalCoderHouse.Repository
                 return producto;
             }
 
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString)) // Creo un objeto de tipo SqlConnection con el connectionString que me permite acceder a mi BD. // El "using" permite liberar los recursos declarados "(...)" para que no permanezcan en memoria más de lo necesario.
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString)) // Creo un objeto de tipo SqlConnection con el connectionString que me permite acceder a mi BD. // El "using" permite liberar los recursos declarados "(...)" para que no permanezcan en memoria más de lo necesario.
             {
                 const string queryGet = "SELECT * FROM [SistemaGestion].[dbo].[Producto] WHERE Id = @id"; // Query que me permite seleccionar todas las columnas de la tabla Prodcuto de la fila cuyo Id = id
 
@@ -213,7 +282,7 @@ namespace ProyectoFinalCoderHouse.Repository
                 return producto;
             }
 
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString)) // Creo un objeto de tipo SqlConnection con el connectionString que me permite acceder a mi BD. // El "using" permite liberar los recursos declarados "(...)" para que no permanezcan en memoria más de lo necesario.
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString)) // Creo un objeto de tipo SqlConnection con el connectionString que me permite acceder a mi BD. // El "using" permite liberar los recursos declarados "(...)" para que no permanezcan en memoria más de lo necesario.
             {
                 const string querySelect = "SELECT * FROM [SistemaGestion].[dbo].[Producto] WHERE Id = @id"; // Query que selecciona todas las columnas de la tabla Producto de las filas con Id = id.
 
@@ -256,7 +325,7 @@ namespace ProyectoFinalCoderHouse.Repository
             bool resultado = false; // Creo una variable tipo bool que va a indicar si se pudo o no actualizar el stock del Producto.
             int rowsAffected = 0;   // Variable que va a indicar la cantidad de filas que fueron afectadas al ejecutar la query en la BD. Se utiliza para validación del método.
 
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString)) // Creo un objeto de tipo SqlConnection con el connectionString que me permite acceder a mi BD. // El "using" permite liberar los recursos declarados "(...)" para que no permanezcan en memoria más de lo necesario.
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString)) // Creo un objeto de tipo SqlConnection con el connectionString que me permite acceder a mi BD. // El "using" permite liberar los recursos declarados "(...)" para que no permanezcan en memoria más de lo necesario.
             {
                 string queryUpdate = "UPDATE [SistemaGestion].[dbo].[Producto] " + // Query que me permite actualizar la columna el Stock de la tabla Producto.
                                         "SET Stock = @stock " +

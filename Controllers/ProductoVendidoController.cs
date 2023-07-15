@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ProyectoFinalCoderHouse.Controllers.DTOS;
 using ProyectoFinalCoderHouse.Models;
 using ProyectoFinalCoderHouse.Repository;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProyectoFinalCoderHouse.Controllers
 {
@@ -15,19 +13,34 @@ namespace ProyectoFinalCoderHouse.Controllers
     {
 
         private readonly ILogger<ProductoVendidoController> _logger;
-
-        public ProductoVendidoController(ILogger<ProductoVendidoController> logger)
+        private readonly ProductoVendidoHandler _productoVendidoHandler;
+        public ProductoVendidoController(ProductoVendidoHandler productoVendidoHandler, ILogger<ProductoVendidoController> logger)
         {
             _logger = logger;
+            _productoVendidoHandler = productoVendidoHandler;
         }
 
+
+        /// <summary>
+        /// Traer todos los Productos Vendidos
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IEnumerable<ProductoVendido> GetAllProductosVendidos()
         {
-         
-            return ProductoVendidoHandler.TraerListaProductoVendidos();
+             return _productoVendidoHandler.TraerListaProductoVendidos();
+      
+        }
 
-       
+        
+        /// <summary>
+        /// Traer los Productos Vendidos por un Usuario ingresando su ID.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{idUsuario}")]
+        public IEnumerable<ProductoVendidoDTO> GetProductosPorIdUsuario(long idUsuario)
+        {
+            return _productoVendidoHandler.TraerProductosPorIdUsuario(idUsuario);
         }
     }
 }

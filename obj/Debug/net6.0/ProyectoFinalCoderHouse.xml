@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ProyectoFinalCoderHouse</name>
+    </assembly>
+    <members>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.NombreController.Get">
+            <summary>
+            Nombre de la aplicación.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.GetAllProductos">
+            <summary>
+            Traer una Lista de todos los Productos existentes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.PostProducto(ProyectoFinalCoderHouse.Models.Producto)">
+            <summary>
+            Crear un Producto nuevo.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.PutProducto(ProyectoFinalCoderHouse.Models.Producto)">
+            <summary>
+            Modificar un Producto existente.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.DeleteProducto(System.Int64)">
+            <summary>
+            Eliminar un Producto existente ingresando el ID.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoController.GetProductosPorIdUsuario(System.Int64)">
+            <summary>
+            Traer los productos cargados por un Usuario ingresando su ID.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoVendidoController.GetAllProductosVendidos">
+            <summary>
+            Traer todos los Productos Vendidos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.ProductoVendidoController.GetProductosPorIdUsuario(System.Int64)">
+            <summary>
+            Traer los Productos Vendidos por un Usuario ingresando su ID.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.InicioDeSesion(System.String,System.String)">
+            <summary>
+            Inicio de Sesión ingresando Usuario y Contaseña.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.GetAllUsuarios">
+            <summary>
+            Traer una Lista de todos los Usuarios existentes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.GetNombreUsuario(System.String)">
+            <summary>
+            Traer datos de un Usuario ingresando su nombre de usuario.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.PostUsuario(ProyectoFinalCoderHouse.Models.Usuario)">
+            <summary>
+            Crear un Usuario nuevo.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.PutUsuario(ProyectoFinalCoderHouse.Models.Usuario)">
+            <summary>
+            Modificar un Usuario existente.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.UsuarioController.DeleteUsuario(System.Int64)">
+            <summary>
+            Eliminar un Usuario existente ingresando el ID.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.VentaController.GetVentas(System.Int64)">
+            <summary>
+            Traer las Ventas por Usuario ingresando su ID.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.VentaController.PostVenta(System.Collections.Generic.List{ProyectoFinalCoderHouse.Controllers.DTOS.PostVenta},System.Int64)">
+            <summary>
+            Realizar una Venta enviando una la Lista de Productos con el Usuario ingresando su ID.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.VentaController.DeleteProducto(System.Int64)">
+            <summary>
+            Eliminar una Venta existente ingresando el ID.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.VentaController.TraerVentas">
+            <summary>
+            Traer todas las Ventas.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProyectoFinalCoderHouse.Models.Usuario.IsValidaContraseña(System.String,System.Int32)">
+            Método privado para validar una contraseña segura
+        </member>
+    </members>
+</doc>

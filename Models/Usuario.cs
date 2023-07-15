@@ -1,8 +1,6 @@
-﻿using System;
+﻿using ProyectoFinalCoderHouse.Exceptions;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProyectoFinalCoderHouse.Models
 {
@@ -10,16 +8,17 @@ namespace ProyectoFinalCoderHouse.Models
     public class Usuario
     {
         #region Atributos
-        private int _id;
+        private long _id;
         private string _nombre;
         private string _apellido;
         private string _nombreUsuario;
         private string _contraseña;
         private string _mail;
+        
         #endregion
 
         #region Constructores
-        public Usuario(int id, string nombre, string apellido, string nombreUsuario, string contraseña, string mail)
+        public Usuario(long id, string nombre, string apellido, string nombreUsuario, string contraseña, string mail)
         {
             // Validacion de parametros
             if (string.IsNullOrWhiteSpace(nombre))
@@ -55,6 +54,8 @@ namespace ProyectoFinalCoderHouse.Models
             _nombreUsuario = nombreUsuario;
             _contraseña = contraseña;
             _mail = mail;
+            // Mensaje de creacion de la instancia de Usuario
+            Console.WriteLine("La instancia de Usuario se ha creado con constuctor con argumentos.");
         }
         // Constructor sin argumentos para inicializar por defecto los atributos privados
         public Usuario()
@@ -66,9 +67,11 @@ namespace ProyectoFinalCoderHouse.Models
             _nombreUsuario = string.Empty;
             _contraseña = string.Empty;
             _mail = string.Empty;
+           
+
 
             // Mensaje de creacion de la instancia de Usuario
-            Console.WriteLine("La instancia de Usuario se ha creado satisfactoriamente.");
+            Console.WriteLine("La instancia de Usuario se ha creado con constuctor sin argumentos.");
         }
 
         #endregion
@@ -76,7 +79,7 @@ namespace ProyectoFinalCoderHouse.Models
         #region Propiedades
         // Propiedades publicas de la clase, para poder acceder a sus Atributos privados
 
-        public int Id
+        public long Id
         {
             get { return _id; }
             set { _id = value; }
@@ -114,18 +117,18 @@ namespace ProyectoFinalCoderHouse.Models
             get { return _contraseña; }
             set
             {
-                // Validacion de contraseña segura con largo mayor a 8 y cuatro validaciones
                 const int iLargoContraseña = 8;
                 if (!IsValidaContraseña(value, iLargoContraseña))
                 {
-                    throw new ArgumentException("Ha ingresado una contraseña inválida. Debe tener un mínimo de largo 8 con: un número, una mayúscula, una minúscula y un caracter especial.");
+                    throw new ContraseñaInvalidaException("Contraseña inválida: debe tener un mínimo de 8 caracteres e incluir: 0-9, A-Z, a-z y un carácter especial.");
                 }
 
                 _contraseña = value;
-
             }
         }
 
+
+      
         public string Mail
         {
             get { return _mail; }
@@ -140,6 +143,14 @@ namespace ProyectoFinalCoderHouse.Models
                 _mail = value;
             }
         }
+        public bool EsValido { get; set; }
+        
+        public string MensajeLogin { get; set; }
+
+
+        public virtual ICollection<Producto> Productos { get; set; } = new List<Producto>();
+
+        public virtual ICollection<Venta> Venta { get; set; } = new List<Venta>();
 
 
         #endregion
@@ -150,7 +161,7 @@ namespace ProyectoFinalCoderHouse.Models
 
 
         ///Método privado para validar una contraseña segura
-        private static bool IsValidaContraseña(string sPassword, int iLongitud)
+        public static bool IsValidaContraseña(string sPassword, int iLongitud)
         {
             bool bMayuscula = false, bMinuscula = false, bNumerica = false, bCarEspecial = false;
 

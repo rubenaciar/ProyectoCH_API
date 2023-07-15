@@ -1,21 +1,115 @@
-﻿using ProyectoFinalCoderHouse.Models;
+﻿using Microsoft.Extensions.Configuration;
+using ProyectoFinalCoderHouse.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection.PortableExecutable;
+using System.IO;
 
 namespace ProyectoFinalCoderHouse.Repository
 {
-    public static class UsuarioHandler
+    public class UsuarioHandler
     {
-        public static string ConnectionString = @"Server=P533750\SQLEXPRESS;Database=SistemaGestion;Trusted_Connection=True;";
+        private static readonly string _connectionString;
+        static UsuarioHandler()
+        {
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            _connectionString = configuration.GetConnectionString("connectionDB");
+        }
+
+        // Método que recibe como parámetro un NombreUsuario y una Contraseña. Debe buscar en la base de datos si el Usuario existe y si posee la misma Contraseña lo devuelve, caso contrario devuelve error.
+        public Usuario InicioDeSesion(string nombreUsuario, string contraseña)
+        {
+            Usuario usuario = new Usuario();
+
+            // Verifico si los argumentos son validos
+            if (string.IsNullOrEmpty(nombreUsuario) || string.IsNullOrEmpty(contraseña)) // Si nombreUsuario o contraseña están vacíos o son null no ejecuto el método y devuelvo usuario vacío.
+            {
+                return usuario; // Devuelvo un Usuario inicializado por defecto.
+            }
+
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [SistemaGestion].[dbo].[Usuario] WHERE (NombreUsuario = @nombreUsuario AND Contraseña = @contraseña)", sqlConnection))
+                {
+                    var sqlParameter1 = new SqlParameter();
+                    sqlParameter1.ParameterName = "nombreUsuario";
+                    sqlParameter1.SqlDbType = SqlDbType.VarChar;
+                    sqlParameter1.Value = nombreUsuario;
+                    sqlCommand.Parameters.Add(sqlParameter1);
+
+                    var sqlParameter2 = new SqlParameter();
+                    sqlParameter2.ParameterName = "contraseña";
+                    sqlParameter2.SqlDbType = SqlDbType.VarChar;
+                    sqlParameter2.Value = contraseña;
+                    sqlCommand.Parameters.Add(sqlParameter2);
+
+                    sqlConnection.Open();
+
+                    using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+                    {
+                        if (dataReader.HasRows & dataReader.Read())
+                        {
+                            usuario.Id = Convert.ToInt32(dataReader["Id"]);
+                            usuario.Nombre = dataReader["Nombre"].ToString();
+                            usuario.Apellido = dataReader["Apellido"].ToString();
+                            usuario.NombreUsuario = dataReader["NombreUsuario"].ToString();
+                            usuario.Contraseña = dataReader["Contraseña"].ToString();
+                            usuario.Mail = dataReader["Mail"].ToString();
+                            usuario.EsValido = true;
+                            usuario.MensajeLogin = "Ingreso al sistema con Usuario Correcto";
+                            Console.WriteLine(usuario.MensajeLogin);
+                        }
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            
+            return usuario;
+        }
+
+
+        // Método para insertar un nuevo usuario en la Base de Datos
+        // Recibe un objeto Usuario con la información del usuario a crear
+        // Devuelve el Id asignado al nuevo registro
+        public int CrearUsuario(Usuario usuario)
+        {
+            // Creamos una nueva conexión a la base de datos utilizando el string de conexión que se recibió en el constructor
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Definimos la consulta SQL que vamos a ejecutar
+                const string query = @"INSERT INTO Usuario (Nombre, Apellido, NombreUsuario, Contraseña, Mail) 
+                                   VALUES (@Nombre, @Apellido, @NombreUsuario, @Contraseña, @Mail);
+                                   SELECT SCOPE_IDENTITY();";
+                // Creamos una nueva instancia de SqlCommand con la consulta SQL y la conexión asociada
+                using (var command = new SqlCommand(query, connection))
+                {
+                    // Agregamos los parámetros correspondientes a la consulta SQL utilizando el objeto Usuario recibido como parámetro
+                    command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
+                    command.Parameters.AddWithValue("@Apellido", usuario.Apellido);
+                    command.Parameters.AddWithValue("@NombreUsuario", usuario.NombreUsuario);
+                    command.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
+                    command.Parameters.AddWithValue("@Mail", usuario.Mail);
+
+                    // Ejecutamos la consulta SQL utilizando ExecuteScalar() que retorna el id generado para nuevo registro insertado
+                    return (int)(decimal)command.ExecuteScalar();
+                }
+            }
+        }
+
         // Método para modificar un usuario existente en la Base de Datos
         // Recibe un objeto Usuario con la información actualizada del usuario a modificar
         // Devuelve true si la modificación fue exitosa, false si no
-        public static bool ModificarUsuario(Usuario usuario)
+        public bool ModificarUsuario(Usuario usuario)
         {
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
@@ -41,16 +135,41 @@ namespace ProyectoFinalCoderHouse.Repository
             }
         }
 
-        public static List<Usuario> TraerListaUsuarios()
+        // Método para eliminar un usuario de la Base de Datos según su Id
+        // Recibe el Id del usuario que se desea eliminar
+        // Devuelve true si la eliminación fue exitosa, false si no
+        public bool EliminarUsuario(long id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                // Definimos la consulta SQL que vamos a ejecutar
+                const string query = @"DELETE FROM Usuario WHERE Id = @Id";
+                // Creamos una nueva instancia de SqlCommand con la consulta SQL y la conexión asociada
+                using (var command = new SqlCommand(query, connection))
+                {
+                    // Agregamos el parámetro correspondiente a la consulta SQL utilizando el Id recibido como parámetro
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    // Ejecutamos la consulta SQL utilizando ExecuteNonQuery() que retorna la cantidad de filas afectadas por la consulta SQL
+                    // En este caso, debería ser 1 si se eliminó el usuario correctamente, o 0 si no se encontró el usuario con el Id correspondiente
+                    return command.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
+
+        // Método para devolver la Lista de Usuarios almacenados en la base de datos.
+        public List<Usuario> TraerListaUsuarios()
         {
 
-            //string connectionString = @"Server=P533750\SQLEXPRESS;Database=SistemaGestion;Trusted_Connection=True;";
             var query = "SELECT Id, Nombre, Apellido, NombreUsuario, Contraseña, Mail FROM Usuario";
             List<Usuario> listaUsuarios = new List<Usuario>();
 
             //Creamos una instancia de conexión utilizando el string a nuestra BD, usando using para limpiar los recursos
 
-            using (SqlConnection conect = new SqlConnection(ConnectionString))
+            using (SqlConnection conect = new SqlConnection(_connectionString))
             {
                 // Abrimos nuestra conexion a la BD
                 conect.Open();
@@ -93,32 +212,28 @@ namespace ProyectoFinalCoderHouse.Repository
 
         }
 
-        // Método que recibe como parámetro un NombreUsuario y una Contraseña. Debe buscar en la base de datos si el Usuario existe y si posee la misma Contraseña lo devuelve, caso contrario devuelve error.
-        public static Usuario InicioDeSesion(string nombreUsuario, string contraseña)
+       
+
+        // Método que recibe el Nombre del Usuario y debe buscarlo en la base de datos para devolver todos sus atributos.
+        public Usuario TraerUsuarioPorNombre(string nombreUsuario)
         {
             Usuario usuario = new Usuario();
 
-            // Verifico si los argumentos son validos
-            if (string.IsNullOrEmpty(nombreUsuario) || string.IsNullOrEmpty(contraseña)) // Si nombreUsuario o contraseña están vacíos o son null no ejecuto el método y devuelvo usuario vacío.
+            // Verifico si el argumento pasado es válido
+            if (string.IsNullOrWhiteSpace(nombreUsuario))
             {
-                return usuario; // Devuelvo un Usuario inicializado por defecto.
+                throw new ArgumentException("El nombre de usuario no puede ser nulo o vacio.");
             }
 
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [SistemaGestion].[dbo].[Usuario] WHERE (NombreUsuario = @nombreUsuario AND Contraseña = @contraseña)", sqlConnection))
+                using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Usuario WHERE NombreUsuario = @nombreUsuario;", sqlConnection))
                 {
-                    var sqlParameter1 = new SqlParameter();
-                    sqlParameter1.ParameterName = "nombreUsuario";
-                    sqlParameter1.SqlDbType = SqlDbType.VarChar;
-                    sqlParameter1.Value = nombreUsuario;
-                    sqlCommand.Parameters.Add(sqlParameter1);
-
-                    var sqlParameter2 = new SqlParameter();
-                    sqlParameter2.ParameterName = "contraseña";
-                    sqlParameter2.SqlDbType = SqlDbType.VarChar;
-                    sqlParameter2.Value = contraseña;
-                    sqlCommand.Parameters.Add(sqlParameter2);
+                    var sqlParameter = new SqlParameter();
+                    sqlParameter.ParameterName = "nombreUsuario";
+                    sqlParameter.SqlDbType = SqlDbType.VarChar;
+                    sqlParameter.Value = nombreUsuario;
+                    sqlCommand.Parameters.Add(sqlParameter);
 
                     sqlConnection.Open();
 
@@ -132,8 +247,6 @@ namespace ProyectoFinalCoderHouse.Repository
                             usuario.NombreUsuario = dataReader["NombreUsuario"].ToString();
                             usuario.Contraseña = dataReader["Contraseña"].ToString();
                             usuario.Mail = dataReader["Mail"].ToString();
-
-
                         }
                     }
                     sqlConnection.Close();
@@ -141,8 +254,9 @@ namespace ProyectoFinalCoderHouse.Repository
             }
             return usuario;
         }
+
         // Método que recibe un Id de Usuario y debe buscarlo en la base de datos para devolver todos sus atributos.
-        public static Usuario TraerUsuario_conId(long id)
+        public Usuario TraerUsuarioPorId(long id)
         {
             Usuario usuario = new Usuario();
 
@@ -152,7 +266,7 @@ namespace ProyectoFinalCoderHouse.Repository
                 return usuario; // El id no puede ser cero o negativo. Devuelvo un objeto Usuario inicializado por defecto
             }
 
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [SistemaGestion].[dbo].[Usuario] WHERE Id = @id", sqlConnection))
                 {
