@@ -9,6 +9,7 @@
       "ProyectoFinalCoderHouse/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "7.0.8",
+          "Microsoft.EntityFrameworkCore.InMemory": "7.0.8",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.8",
           "Microsoft.EntityFrameworkCore.Tools": "7.0.8",
           "Swashbuckle.AspNetCore": "5.6.3",
@@ -167,6 +168,17 @@
         },
         "runtime": {
           "lib/net6.0/Microsoft.EntityFrameworkCore.Design.dll": {
+            "assemblyVersion": "7.0.8.0",
+            "fileVersion": "7.0.823.31802"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.InMemory/7.0.8": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "7.0.8"
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.EntityFrameworkCore.InMemory.dll": {
             "assemblyVersion": "7.0.8.0",
             "fileVersion": "7.0.823.31802"
           }
@@ -893,6 +905,13 @@
       "sha512": "sha512-dG+QxTeRZhtEbsN+VXF2D5z6kT1/pOFRkSTXnggugqTz3p7qSceyLqJoyGZXI8l3YsmDywgD7yfxvcy0X8uZMA==",
       "path": "microsoft.entityframeworkcore.design/7.0.8",
       "hashPath": "microsoft.entityframeworkcore.design.7.0.8.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.InMemory/7.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-FGJsIls82+tj7ZrbyiwBiVtEHp1quOE4PGflLR090beptkHK02yLrGoF72ZA045rYd9NR8EMoOk+pqgAafdbDw==",
+      "path": "microsoft.entityframeworkcore.inmemory/7.0.8",
+      "hashPath": "microsoft.entityframeworkcore.inmemory.7.0.8.nupkg.sha512"
     },
     "Microsoft.EntityFrameworkCore.Relational/7.0.8": {
       "type": "package",

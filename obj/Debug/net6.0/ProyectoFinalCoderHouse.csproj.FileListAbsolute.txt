@@ -131,3 +131,4 @@ C:\Users\RY12555\source\repos\ProyectoCH_API\bin\Debug\net6.0\runtimes\browser\l
 C:\Users\RY12555\source\repos\ProyectoCH_API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
 C:\Users\RY12555\source\repos\ProyectoCH_API\bin\Debug\net6.0\ProyectoFinalCoderHouse.xml
 C:\Users\RY12555\source\repos\ProyectoCH_API\obj\Debug\net6.0\ProyectoFinalCoderHouse.xml
+C:\Users\RY12555\source\repos\ProyectoCH_API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.InMemory.dll

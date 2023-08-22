@@ -4,10 +4,10 @@ using System.Collections.Generic;
 namespace ProyectoFinalCoderHouse.Models
 {
     //CLASE PRODUCTO
-    public class Producto
+    public class Producto : EntityBase
     {
         #region Atributos
-        private long _id;
+        //private long _id;
         private string _descripciones;
         private decimal _costo;
         private decimal _precioVenta;
@@ -19,7 +19,7 @@ namespace ProyectoFinalCoderHouse.Models
         // Constructor por defecto para inicializar los atributos
         public Producto()
         {
-            _id = 0;
+            //_id = 0;
             _descripciones = string.Empty;
             _costo = 0;
             _precioVenta = 0;
@@ -53,7 +53,7 @@ namespace ProyectoFinalCoderHouse.Models
                 throw new ArgumentException("La cantidad en stock no puede ser negativa.");
             }
             // Inicializacion de las propiedades por medio de los argumentos
-            _id = id;
+            //_id = id;
             _descripciones = descripciones;
             _costo = costo;
             _precioVenta = precioVenta;
@@ -66,7 +66,7 @@ namespace ProyectoFinalCoderHouse.Models
 
 
         #region Propiedades
-        public long Id { get; set; } // Identificador unico del producto
+        //public override long Id { get; set; } // Identificador unico del producto
         public string Descripciones { get; set; } // Descripciones del producto
         public decimal Costo { get; set; } // Costo de produccion del producto
         public decimal PrecioVenta { get; set; } // Precio de venta del producto

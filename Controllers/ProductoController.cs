@@ -3,20 +3,24 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using ProyectoFinalCoderHouse.Models;
 using ProyectoFinalCoderHouse.Repository;
+using ProyectoFinalCoderHouse.EntityORM;
 
 namespace ProyectoFinalCoderHouse.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductoController : ControllerBase
+    //public class ProductoController : ControllerBase
+    public class ProductoController : GenericCrudController<Producto>
     {
         private readonly ILogger<ProductoController> _logger;
         private readonly ProductoHandler _productoHandler;
-        public ProductoController(ProductoHandler productoHandler, ILogger<ProductoController> logger)
+        public ProductoController( ProductoHandler productoHandler, ILogger<ProductoController> logger,
+        SistemaGestionContext context) : base(context) // Agregar esta línea
         {
             _logger = logger;
             _productoHandler = productoHandler;
         }
+
 
 
         /// <summary>

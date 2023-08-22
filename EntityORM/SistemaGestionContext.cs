@@ -25,6 +25,8 @@ public partial class SistemaGestionContext : DbContext
 
     public virtual DbSet<Venta> Venta { get; set; }
 
+    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)

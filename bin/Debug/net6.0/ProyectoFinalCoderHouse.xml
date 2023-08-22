@@ -4,6 +4,12 @@
         <name>ProyectoFinalCoderHouse</name>
     </assembly>
     <members>
+        <member name="M:ProyectoFinalCoderHouse.Controllers.GenericCrudController`1.List">
+            <summary>
+            Traer una Lista de todos los T existentes.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:ProyectoFinalCoderHouse.Controllers.NombreController.Get">
             <summary>
             Nombre de la aplicación.
