@@ -5,10 +5,10 @@ using System.Collections.Generic;
 namespace ProyectoFinalCoderHouse.Models
 {
     //CLASE USUARIO
-    public class Usuario
+    public class Usuario : Entity
     {
         #region Atributos
-        private long _id;
+        //private long _id;
         private string _nombre;
         private string _apellido;
         private string _nombreUsuario;
@@ -48,7 +48,7 @@ namespace ProyectoFinalCoderHouse.Models
 
 
             // Inicializar los atributos privados con los parámetros ingresados
-            _id = id;
+            //_id = id;
             _nombre = nombre;
             _apellido = apellido;
             _nombreUsuario = nombreUsuario;
@@ -61,7 +61,7 @@ namespace ProyectoFinalCoderHouse.Models
         public Usuario()
         {
 
-            _id = 0;
+            //_id = 0;
             _nombre = string.Empty;
             _apellido = string.Empty;
             _nombreUsuario = string.Empty;
@@ -79,11 +79,11 @@ namespace ProyectoFinalCoderHouse.Models
         #region Propiedades
         // Propiedades publicas de la clase, para poder acceder a sus Atributos privados
 
-        public long Id
-        {
-            get { return _id; }
-            set { _id = value; }
-        }
+        //public long Id
+        //{
+        //    get { return _id; }
+        //    set { _id = value; }
+        //}
 
         public string Nombre
         {

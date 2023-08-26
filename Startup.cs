@@ -10,6 +10,8 @@ using ProyectoFinalCoderHouse.Repository;
 using System.IO;
 using System.Reflection;
 using ProyectoFinalCoderHouse.EntityORM;
+using ProyectoFinalCoderHouse.Application;
+using ProyectoFinalCoderHouse.Abstractions;
 
 namespace ProyectoFinalCoderHouse
 {
@@ -52,7 +54,9 @@ namespace ProyectoFinalCoderHouse
             services.AddScoped<ProductoHandler>();
             services.AddScoped<UsuarioHandler>();
             services.AddScoped<ProductoVendidoHandler>();
-
+            services.AddScoped(typeof(IApplication<>),typeof(Application<>));
+            services.AddScoped(typeof(IRepository<>),typeof(Repository<>)); //Cuando pidamos un objeto Repository le damos una instancia del mismo
+            services.AddScoped(typeof(IDBContext<>), typeof(DBContext<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
